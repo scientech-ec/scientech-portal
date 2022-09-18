@@ -2,21 +2,26 @@ import { RoutesInterface } from '../interfaces/routesInterface';
 
 const routes: RoutesInterface = {
   client: {
-    home: { title: 'Inicio | Scientech', name: 'Inicio', target: '/' },
+    home: { title: 'Inicio | Scientech Ecuador', name: 'Inicio', target: '/' },
     products: {
-      title: 'Catálogo | Scientech',
+      title: 'Catálogo | Scientech Ecuador',
       name: 'Productos',
       target: '/productos',
     },
     contact: {
-      title: 'Contacto | Scientech',
+      title: 'Contacto | Scientech Ecuador',
       name: 'Contacto',
       target: '/contacto',
+    },
+    'under-construction': {
+      title: 'Esperanos | Scientech Ecuador',
+      name: 'Contacto',
+      target: '/en_construccion',
     },
   },
   employee: {
     login: {
-      title: 'Contacto | Scientech',
+      title: 'Contacto | Scientech Ecuador',
       name: 'Contacto',
       target: '/contacto',
     },

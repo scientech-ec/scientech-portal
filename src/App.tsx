@@ -3,6 +3,7 @@ import ClientWrapper from './components/templates/ClientWrapper';
 import ContactPage from './components/templates/ContactPage';
 import HomePage from './components/templates/HomePage';
 import ProductsPage from './components/templates/ProductsPage';
+import UnderConstruction from './components/templates/UnderConstruction';
 import routes from './helpers/routes';
 
 const App = () => {
@@ -19,6 +20,10 @@ const App = () => {
             <Route
               path={routes.client.contact.target}
               element={<ContactPage />}
+            />
+            <Route
+              path={routes.client['under-construction'].target}
+              element={<UnderConstruction />}
             />
           </Route>
         </Routes>
