@@ -16,14 +16,14 @@ const routes: RoutesInterface = {
     'under-construction': {
       title: 'Esperanos | Scientech Ecuador',
       name: 'Contacto',
-      target: '/en_construccion',
+      target: '/under-construction',
     },
   },
   employee: {
     login: {
-      title: 'Contacto | Scientech Ecuador',
-      name: 'Contacto',
-      target: '/contacto',
+      title: 'Login | Scientech Ecuador',
+      name: 'Login',
+      target: '/login',
     },
   },
 };

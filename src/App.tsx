@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import ClientWrapper from './components/templates/ClientWrapper';
 import ContactPage from './components/templates/ContactPage';
 import HomePage from './components/templates/HomePage';
+import LoginPage from './components/templates/LoginPage';
 import ProductsPage from './components/templates/ProductsPage';
 import UnderConstruction from './components/templates/UnderConstruction';
 import routes from './helpers/routes';
@@ -26,6 +27,7 @@ const App = () => {
               element={<UnderConstruction />}
             />
           </Route>
+          <Route path={routes.employee.login.target} element={<LoginPage />} />
         </Routes>
       </BrowserRouter>
     </>
