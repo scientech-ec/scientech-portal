@@ -16,7 +16,7 @@ const ClientHead: React.FC = () => {
   }, [pathname]);
 
   useEffect(() => {
-    navigate('/en_construccion', { replace: true });
+    navigate(routes.client['under-construction'].target, { replace: true });
   }, []);
 
   return null;
