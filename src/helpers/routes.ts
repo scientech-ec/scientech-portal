@@ -13,7 +13,7 @@ const routes: RoutesInterface = {
       name: "Contacto",
       target: "/contacto",
     },
-    "under-construction": {
+    underConstruction: {
       title: "Esperanos | Scientech Ecuador",
       name: "Contacto",
       target: "/under-construction",
@@ -29,6 +29,13 @@ const routes: RoutesInterface = {
       title: "Dashboard | Scientech Ecuador",
       name: "Dashboard",
       target: "/dashboard",
+    },
+  },
+  apps: {
+    calculator: {
+      title: "Calculadora de Importaciones | Scientech Ecuador",
+      name: "Calculadora",
+      target: "/dashboard/calculadora",
     },
   },
 };

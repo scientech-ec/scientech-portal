@@ -1,6 +1,7 @@
-import React, { useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import routes from '../../helpers/routes';
+import React, { useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import routes from "../../helpers/routes";
+import NavBar from "../molecules/NavBar";
 
 const ClientHead: React.FC = () => {
   const { client } = routes;
@@ -15,11 +16,12 @@ const ClientHead: React.FC = () => {
     });
   }, [pathname]);
 
+  // todo: when dev is over, remove the following useEffect
   useEffect(() => {
-    navigate(routes.client['under-construction'].target, { replace: true });
+    navigate(client.underConstruction.target, { replace: true });
   }, []);
 
-  return null;
+  return <NavBar pages={client} />;
 };
 
 export default ClientHead;

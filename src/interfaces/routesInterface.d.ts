@@ -5,10 +5,7 @@ export type RouteObject = {
 };
 
 export type RoutesInterface = {
-  client: {
-    [key: string]: RouteObject;
-  };
-  employee: {
-    [key: string]: RouteObject;
-  };
+  client: Record<string, RouteObject>;
+  employee: Record<string, RouteObject>;
+  apps: Record<string, RouteObject>;
 };

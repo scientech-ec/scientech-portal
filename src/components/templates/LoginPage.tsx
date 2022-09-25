@@ -5,6 +5,7 @@ import Scientech from "../atoms/logos/Scientech";
 import { Formik, Form, ErrorMessage, Field } from "formik";
 import * as Yup from "yup";
 import { loginUser } from "../../services/loginServices";
+import routes from "../../helpers/routes";
 
 export const initialValues = {
   email: "",
@@ -43,6 +44,7 @@ const LoginPage: React.FC = () => {
             const user = await loginUser(values.email, values.password);
             console.log(user);
             actions.setSubmitting(false);
+            navigate(routes.employee.dashboard.target);
           }}
         >
           {({ isSubmitting }) => (
