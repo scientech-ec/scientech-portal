@@ -1,6 +1,5 @@
 import React from "react";
 import underConstruction from "../../assets/under-construction.jpg";
-import scientechLarge from "../../assets/scientechLargeBlue.png";
 import { Link } from "react-router-dom";
 import routes from "../../helpers/routes";
 import { FaUserCircle } from "react-icons/fa";
@@ -8,7 +7,7 @@ import Scientech from "../atoms/logos/Scientech";
 
 const UnderConstruction: React.FC = () => {
   return (
-    <main className="fixed inset-0 w-screen h-screen z-50 bg-white">
+    <main className="fixed inset-0 z-50 h-screen w-screen bg-white">
       <div className="flex h-screen flex-col items-center justify-center gap-6 md:flex-row">
         <div className="order-1 md:flex-1">
           <img src={underConstruction} alt="under-construction" />
