@@ -1,9 +1,10 @@
-import React from 'react';
-import underConstruction from '../../assets/under-construction.jpg';
-import scientechLarge from '../../assets/scientechLargeBlue.png';
-import { Link } from 'react-router-dom';
-import routes from '../../helpers/routes';
-import { FaUserCircle } from 'react-icons/fa';
+import React from "react";
+import underConstruction from "../../assets/under-construction.jpg";
+import scientechLarge from "../../assets/scientechLargeBlue.png";
+import { Link } from "react-router-dom";
+import routes from "../../helpers/routes";
+import { FaUserCircle } from "react-icons/fa";
+import Scientech from "../atoms/logos/Scientech";
 
 const UnderConstruction: React.FC = () => {
   return (
@@ -17,11 +18,7 @@ const UnderConstruction: React.FC = () => {
             Espera noticias de nosotros <br />
             MUY PRONTO!
           </h2>
-          <img
-            className="w-1/2 md:w-4/5"
-            src={scientechLarge}
-            alt="Scientech Logo"
-          />
+          <Scientech />
         </div>
         <div
           className="absolute top-2
