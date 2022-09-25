@@ -2,9 +2,8 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { BsArrowLeftCircle } from "react-icons/bs";
 import Scientech from "../atoms/logos/Scientech";
-import { Formik, Form } from "formik";
+import { Formik, Form, ErrorMessage, Field } from "formik";
 import * as Yup from "yup";
-import Input from "../atoms/login/input";
 import { loginUser } from "../../services/loginServices";
 
 export const initialValues = {
@@ -23,16 +22,16 @@ const LoginPage: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <main className="flex h-screen w-screen items-center justify-center bg-slate-50">
+    <main className="flex h-screen w-screen items-center justify-center bg-slate-50 px-6">
       <BsArrowLeftCircle
         onClick={() => navigate(-1)}
-        className="absolute top-5 left-5 h-12 w-12 cursor-pointer rounded-full  text-gray-400 hover:text-gray-600"
+        className="absolute top-5 left-5 h-12 w-12 cursor-pointer rounded-full text-gray-400 hover:text-gray-600"
       />
 
-      <section className="flex flex-col gap-6">
+      <section className="mx-auto flex max-w-sm flex-col gap-6">
         <h1 className="sr-only">Iniciar Sesión</h1>
         <div className="">
-          <Scientech className="h-10" />
+          <Scientech className="" />
           <h2 className="mt-6 text-center text-3xl font-extrabold uppercase text-gray-900">
             Bienvenido
           </h2>
@@ -48,14 +47,15 @@ const LoginPage: React.FC = () => {
         >
           {({ isSubmitting }) => (
             <Form>
-              <Input
-                className="rounded-t-xl border-b-0"
+              <Field
+                className="w-full rounded-t-xl border-2 border-b-0 py-3 px-6 text-lg focus:outline-none"
                 name="email"
                 placeholder="Correo electrónico"
                 type="email"
               />
-              <Input
-                className="rounded-b-xl"
+
+              <Field
+                className="w-full rounded-b-xl border-2 py-3 px-6 text-lg focus:outline-none"
                 name="password"
                 placeholder="Contraseña"
                 type="password"
@@ -67,6 +67,16 @@ const LoginPage: React.FC = () => {
               >
                 {isSubmitting ? "Cargando" : "Ingresar"}
               </button>
+              <div className="">
+                {Object.keys(initialValues).map((key) => (
+                  <ErrorMessage
+                    key={key}
+                    name={key}
+                    component="div"
+                    className="text-xs text-red-500"
+                  />
+                ))}
+              </div>
             </Form>
           )}
         </Formik>
