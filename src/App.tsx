@@ -9,6 +9,16 @@ import ProductsPage from "./components/templates/ProductsPage";
 import UnderConstruction from "./components/templates/UnderConstruction";
 import routes from "./helpers/routes";
 import CalculatorApp from "./components/templates/CalculatorApp";
+import { RealmAppProvider } from "./hooks/useRealmApp";
+
+const AppWithRealm = () => {
+  const id = import.meta.env.VITE_REALM_APP;
+  return (
+    <RealmAppProvider appId={id}>
+      <App />
+    </RealmAppProvider>
+  );
+};
 
 const App = () => {
   const {
@@ -17,26 +27,24 @@ const App = () => {
     apps: { calculator },
   } = routes;
   return (
-    <>
-      <BrowserRouter>
-        <Routes>
-          <Route path={home.target} element={<ClientWrapper />}>
-            <Route index element={<HomePage />} />
-            <Route path={products.target} element={<ProductsPage />} />
-            <Route path={contact.target} element={<ContactPage />} />
-            <Route
-              path={underConstruction.target}
-              element={<UnderConstruction />}
-            />
-          </Route>
-          <Route path={login.target} element={<LoginPage />} />
-          <Route path={dashboard.target} element={<PrivateWrapper />}>
-            <Route path={calculator.target} element={<CalculatorApp />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path={home.target} element={<ClientWrapper />}>
+          <Route index element={<HomePage />} />
+          <Route path={products.target} element={<ProductsPage />} />
+          <Route path={contact.target} element={<ContactPage />} />
+          <Route
+            path={underConstruction.target}
+            element={<UnderConstruction />}
+          />
+        </Route>
+        <Route path={login.target} element={<LoginPage />} />
+        <Route path={dashboard.target} element={<PrivateWrapper />}>
+          <Route path={calculator.target} element={<CalculatorApp />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 };
 
-export default App;
+export default AppWithRealm;
