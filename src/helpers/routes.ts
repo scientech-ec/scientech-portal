@@ -1,6 +1,6 @@
 import { RouteObject } from "../interfaces/routesInterface";
 
-type ClientRoutes = {
+type PublicRoutes = {
   home: RouteObject;
   products: RouteObject;
   contact: RouteObject;
@@ -8,18 +8,19 @@ type ClientRoutes = {
   [key: string]: RouteObject;
 };
 
-type EmployeeRoutes = {
-  login: RouteObject;
+type ProtectedRoutes = {
   dashboard: RouteObject;
-  [key: string]: RouteObject;
-};
-
-type AppsRoutes = {
   calculator: RouteObject;
   [key: string]: RouteObject;
 };
 
-export const clientRoutes: ClientRoutes = {
+export const login = {
+  title: "Login | Scientech Ecuador",
+  name: "Login",
+  target: "/login",
+};
+
+export const publicRoutes: PublicRoutes = {
   home: { title: "Inicio | Scientech Ecuador", name: "Inicio", target: "/" },
   products: {
     title: "Catálogo | Scientech Ecuador",
@@ -38,20 +39,12 @@ export const clientRoutes: ClientRoutes = {
   },
 };
 
-export const employeeRoutes: EmployeeRoutes = {
-  login: {
-    title: "Login | Scientech Ecuador",
-    name: "Login",
-    target: "/login",
-  },
+export const protectedRoutes: ProtectedRoutes = {
   dashboard: {
     title: "Dashboard | Scientech Ecuador",
     name: "Dashboard",
     target: "/dashboard",
   },
-};
-
-export const appsRoutes: AppsRoutes = {
   calculator: {
     title: "Calculadora de Importaciones | Scientech Ecuador",
     name: "Calculadora",

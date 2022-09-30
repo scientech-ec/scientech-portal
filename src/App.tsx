@@ -1,14 +1,14 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import CalculatorApp from "./components/templates/CalculatorApp";
-import ClientWrapper from "./components/templates/ClientWrapper";
 import ContactPage from "./components/templates/ContactPage";
 import HomePage from "./components/templates/HomePage";
 import LoginPage from "./components/templates/LoginPage";
 import PrivateWrapper from "./components/templates/PrivateWrapper";
 import ProductsPage from "./components/templates/ProductsPage";
+import PublicWrapper from "./components/templates/PublicWrapper";
 import UnderConstruction from "./components/templates/UnderConstruction";
-import { appsRoutes, clientRoutes, employeeRoutes } from "./helpers/routes";
+import { login, protectedRoutes, publicRoutes } from "./helpers/routes";
 import { RealmAppProvider } from "./hooks/useRealmApp";
 
 const AppWithRealm: React.FC = () => {
@@ -21,14 +21,13 @@ const AppWithRealm: React.FC = () => {
 };
 
 const App: React.FC = () => {
-  const { contact, home, products, underConstruction } = clientRoutes;
-  const { dashboard, login } = employeeRoutes;
-  const { calculator } = appsRoutes;
+  const { contact, home, products, underConstruction } = publicRoutes;
+  const { dashboard, calculator } = protectedRoutes;
 
   return (
     <BrowserRouter>
       <Routes>
-        <Route path={home.target} element={<ClientWrapper />}>
+        <Route path={home.target} element={<PublicWrapper />}>
           <Route index element={<HomePage />} />
           <Route path={products.target} element={<ProductsPage />} />
           <Route path={contact.target} element={<ContactPage />} />

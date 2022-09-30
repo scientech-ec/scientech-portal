@@ -1,7 +1,7 @@
 import React from "react";
 
-const ClientFooter: React.FC = () => {
+const PublicFooter: React.FC = () => {
   return <footer>ClientFooter</footer>;
 };
 
-export default ClientFooter;
+export default PublicFooter;

@@ -4,7 +4,7 @@ import { BsArrowLeftCircle } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import * as Realm from "realm-web";
 import * as Yup from "yup";
-import { employeeRoutes } from "../../helpers/routes";
+import { protectedRoutes } from "../../helpers/routes";
 import { useRealmApp } from "../../hooks/useRealmApp";
 import Scientech from "../atoms/logos/Scientech";
 
@@ -22,7 +22,11 @@ export const schema = Yup.object().shape({
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
-  const { logIn } = useRealmApp();
+  const { logIn, currentUser } = useRealmApp();
+
+  if (currentUser && currentUser.isLoggedIn) {
+    navigate(protectedRoutes.dashboard.target);
+  }
 
   return (
     <main className="flex h-screen w-screen items-center justify-center bg-slate-50 px-6">
@@ -49,7 +53,7 @@ const LoginPage: React.FC = () => {
             );
             await logIn(credentials);
             actions.setSubmitting(false);
-            navigate(employeeRoutes.dashboard.target);
+            navigate(protectedRoutes.dashboard.target);
           }}
         >
           {({ isSubmitting }) => (
