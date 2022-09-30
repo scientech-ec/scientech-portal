@@ -1,18 +1,27 @@
 import React from "react";
-import facebookLogo from "../../../assets/facebook.svg";
 
 interface Props {
+  variant?: "white" | "blue";
   className?: string;
 }
 
-const Scientech: React.FC<Props> = ({ className }) => {
+const Scientech: React.FC<Props> = ({ variant, className }) => {
+  const getVariant = () => {
+    switch (variant) {
+      case "white":
+        return "fill-white";
+      default:
+        return "fill-scientech";
+    }
+  };
+
   return (
     <svg
       version="1.1"
       id="Layer_1"
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 904.7 104.3"
-      className={`fill-scientech ${className}`}
+      className={`${className} ${getVariant()}`}
     >
       <path
         d="M80,90c-5.3,7.3-12.2,10.2-16.4,12.1c-8.5,3.6-15.7,3.7-22.8,3.8c-11.5,0.1-20.3-2.3-24.3-3.5

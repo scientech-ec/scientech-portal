@@ -1,10 +1,12 @@
+import { ErrorMessage, Field, Form, Formik } from "formik";
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import { BsArrowLeftCircle } from "react-icons/bs";
-import Scientech from "../atoms/logos/Scientech";
-import { Formik, Form, ErrorMessage, Field } from "formik";
+import { useNavigate } from "react-router-dom";
+import * as Realm from "realm-web";
 import * as Yup from "yup";
-import { loginUser } from "../../services/loginServices";
+import { protectedRoutes } from "../../helpers/routes";
+import { useRealmApp } from "../../hooks/useRealmApp";
+import Scientech from "../atoms/logos/Scientech";
 
 export const initialValues = {
   email: "",
@@ -20,6 +22,11 @@ export const schema = Yup.object().shape({
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
+  const { logIn, currentUser } = useRealmApp();
+
+  if (currentUser && currentUser.isLoggedIn) {
+    navigate(protectedRoutes.dashboard.target);
+  }
 
   return (
     <main className="flex h-screen w-screen items-center justify-center bg-slate-50 px-6">
@@ -40,9 +47,13 @@ const LoginPage: React.FC = () => {
           initialValues={initialValues}
           validationSchema={schema}
           onSubmit={async (values, actions) => {
-            const user = await loginUser(values.email, values.password);
-            console.log(user);
+            const credentials = Realm.Credentials.emailPassword(
+              values.email,
+              values.password
+            );
+            await logIn(credentials);
             actions.setSubmitting(false);
+            navigate(protectedRoutes.dashboard.target);
           }}
         >
           {({ isSubmitting }) => (
