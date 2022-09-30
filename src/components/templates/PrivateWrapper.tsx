@@ -1,10 +1,12 @@
 import React, { useEffect } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { protectedRoutes } from "../../helpers/routes";
 import { useRealmApp } from "../../hooks/useRealmApp";
-import DashboardHead from "../organisms/DashboardHead";
+import AppSelector from "../molecules/AppSelector";
 
 const PrivateWrapper: React.FC = () => {
   const { currentUser } = useRealmApp();
+  const { pathname } = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -13,10 +15,20 @@ const PrivateWrapper: React.FC = () => {
     }
   }, [currentUser]);
 
+  useEffect(() => {
+    Object.keys(protectedRoutes).map((key) => {
+      if (protectedRoutes[key].target === pathname) {
+        document.title = protectedRoutes[key].title;
+        return;
+      }
+    });
+  }, [pathname]);
   return (
     <>
-      <DashboardHead />
-      <Outlet />
+      <main className="min-h-screen w-full">
+        <AppSelector />
+        <Outlet />
+      </main>
     </>
   );
 };

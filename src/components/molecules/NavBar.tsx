@@ -1,12 +1,10 @@
 import React from "react";
-import { RouteObject } from "../../interfaces/routesInterface";
+import { RoutesInterface } from "../../interfaces/routesInterface";
 import Scientech from "../atoms/logos/Scientech";
 import NavButton from "../atoms/navbar/NavButton";
 
 interface Props {
-  pages: {
-    [key: string]: RouteObject;
-  };
+  pages: RoutesInterface;
 }
 
 const NavBar: React.FC<Props> = ({ pages }) => {
