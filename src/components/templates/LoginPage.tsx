@@ -1,12 +1,12 @@
+import { ErrorMessage, Field, Form, Formik } from "formik";
 import React from "react";
-import * as Yup from "yup";
-import * as Realm from "realm-web";
-import routes from "../../helpers/routes";
-import { useNavigate } from "react-router-dom";
-import Scientech from "../atoms/logos/Scientech";
 import { BsArrowLeftCircle } from "react-icons/bs";
+import { useNavigate } from "react-router-dom";
+import * as Realm from "realm-web";
+import * as Yup from "yup";
+import { employeeRoutes } from "../../helpers/routes";
 import { useRealmApp } from "../../hooks/useRealmApp";
-import { Formik, Form, ErrorMessage, Field } from "formik";
+import Scientech from "../atoms/logos/Scientech";
 
 export const initialValues = {
   email: "",
@@ -49,7 +49,7 @@ const LoginPage: React.FC = () => {
             );
             await logIn(credentials);
             actions.setSubmitting(false);
-            navigate(routes.employee.dashboard.target);
+            navigate(employeeRoutes.dashboard.target);
           }}
         >
           {({ isSubmitting }) => (

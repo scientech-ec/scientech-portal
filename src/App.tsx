@@ -1,17 +1,17 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import CalculatorApp from "./components/templates/CalculatorApp";
 import ClientWrapper from "./components/templates/ClientWrapper";
 import ContactPage from "./components/templates/ContactPage";
-import PrivateWrapper from "./components/templates/PrivateWrapper";
 import HomePage from "./components/templates/HomePage";
 import LoginPage from "./components/templates/LoginPage";
+import PrivateWrapper from "./components/templates/PrivateWrapper";
 import ProductsPage from "./components/templates/ProductsPage";
 import UnderConstruction from "./components/templates/UnderConstruction";
-import routes from "./helpers/routes";
-import CalculatorApp from "./components/templates/CalculatorApp";
+import { appsRoutes, clientRoutes, employeeRoutes } from "./helpers/routes";
 import { RealmAppProvider } from "./hooks/useRealmApp";
 
-const AppWithRealm = () => {
+const AppWithRealm: React.FC = () => {
   const id = import.meta.env.VITE_REALM_APP;
   return (
     <RealmAppProvider appId={id}>
@@ -20,12 +20,11 @@ const AppWithRealm = () => {
   );
 };
 
-const App = () => {
-  const {
-    client: { home, products, contact, underConstruction },
-    employee: { dashboard, login },
-    apps: { calculator },
-  } = routes;
+const App: React.FC = () => {
+  const { contact, home, products, underConstruction } = clientRoutes;
+  const { dashboard, login } = employeeRoutes;
+  const { calculator } = appsRoutes;
+
   return (
     <BrowserRouter>
       <Routes>

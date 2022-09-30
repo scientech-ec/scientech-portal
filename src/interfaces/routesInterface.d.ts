@@ -4,8 +4,4 @@ export type RouteObject = {
   target: string;
 };
 
-export type RoutesInterface = {
-  client: Record<string, RouteObject>;
-  employee: Record<string, RouteObject>;
-  apps: Record<string, RouteObject>;
-};
+export type RoutesInterface = Record<string, RouteObject>;

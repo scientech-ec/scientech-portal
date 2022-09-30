@@ -1,8 +1,8 @@
 import React from "react";
-import underConstruction from "../../assets/under-construction.jpg";
-import { Link } from "react-router-dom";
-import routes from "../../helpers/routes";
 import { FaUserCircle } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import underConstruction from "../../assets/under-construction.jpg";
+import { employeeRoutes } from "../../helpers/routes";
 import Scientech from "../atoms/logos/Scientech";
 
 const UnderConstruction: React.FC = () => {
@@ -25,7 +25,7 @@ const UnderConstruction: React.FC = () => {
         >
           <Link
             type="button"
-            to={routes.employee.login.target}
+            to={employeeRoutes.login.target}
             className="flex items-center space-x-2 rounded-full border py-1 px-2 text-gray-400 hover:text-gray-600 hover:outline-none hover:ring-2 hover:ring-white hover:ring-offset-2 hover:ring-offset-gray-800"
           >
             <span className="text-sm">Iniciar sesión</span>

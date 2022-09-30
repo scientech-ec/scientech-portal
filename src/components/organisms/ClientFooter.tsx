@@ -1,6 +1,6 @@
-import React from 'react';
+import React from "react";
 
-const ClientFooter = () => {
+const ClientFooter: React.FC = () => {
   return <footer>ClientFooter</footer>;
 };
 

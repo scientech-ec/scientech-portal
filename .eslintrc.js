@@ -21,5 +21,7 @@ module.exports = {
     project: ["./tsconfig.eslint.json"],
   },
   plugins: ["react", "@typescript-eslint", "tailwindcss"],
-  rules: {},
+  rules: {
+    "no-console": ["error", { allow: ["warn", "error"] }],
+  },
 };
