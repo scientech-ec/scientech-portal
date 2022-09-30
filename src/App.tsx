@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import CalculatorApp from "./components/templates/CalculatorApp";
 import ContactPage from "./components/templates/ContactPage";
+import DashboardIndex from "./components/templates/DashboardIndex";
 import HomePage from "./components/templates/HomePage";
 import LoginPage from "./components/templates/LoginPage";
 import PrivateWrapper from "./components/templates/PrivateWrapper";
@@ -38,6 +39,7 @@ const App: React.FC = () => {
         </Route>
         <Route path={login.target} element={<LoginPage />} />
         <Route path={dashboard.target} element={<PrivateWrapper />}>
+          <Route index element={<DashboardIndex />} />
           <Route path={calculator.target} element={<CalculatorApp />} />
         </Route>
       </Routes>
