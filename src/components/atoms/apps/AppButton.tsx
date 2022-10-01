@@ -14,7 +14,7 @@ const AppButton: React.FC<Props> = ({
   return (
     <button
       {...rest}
-      className="rounded-md border py-1 px-2 disabled:bg-red-500"
+      className="rounded-md border py-1 px-2 hover:bg-gray-200 active:bg-gray-800 active:text-gray-200"
     >
       {icon !== undefined && iconPosition === "start" && icon}
       {children}
