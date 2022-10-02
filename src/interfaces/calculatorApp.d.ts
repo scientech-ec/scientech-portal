@@ -22,7 +22,14 @@ export type ArticleData = {
   unitFinalPrice: number;
 };
 
-type Calculator = {
+export type Calculator = {
   lot: LotCost;
   articles: ArticleData[];
+};
+
+export type ArticlesHeader = {
+  name: string;
+  type: string;
+  title: string;
+  initialValue: number | string;
 };
