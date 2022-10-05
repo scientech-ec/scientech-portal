@@ -42,10 +42,10 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
 
     setValues(
       produce((draft) => {
-        if (pathArray.length > 1) {
-          draft.articles[parseInt(pathArray[1])][pathArray[2]] = value;
+        if (pathArray.includes("articles")) {
+          draft.articles[parseInt(pathArray[1])][pathArray[2]] =
+            pathArray[2] === "name" ? value : parseInt(value);
         }
-        draft.lot[pathArray[1]] = value;
       })
     );
   };

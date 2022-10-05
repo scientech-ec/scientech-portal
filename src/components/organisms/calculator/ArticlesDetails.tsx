@@ -8,18 +8,28 @@ const ArticlesDetails: React.FC = () => {
     <section className="w-full rounded-md border p-2">
       <h5>Detalle de Artículos</h5>
 
-      <div className="flex">
+      <div className="grid grid-cols-24">
         {articlesHeader.map((column) => (
-          <p key={column.name}>{column.title}</p>
+          <p
+            className={`${
+              column.name === "name" ? "col-span-6" : "col-span-2"
+            }`}
+            key={column.name}
+          >
+            {column.title}
+          </p>
         ))}
-        <button onClick={addRow}>Add row</button>
-      </div>
+        <button className="col-span-2" onClick={addRow}>
+          Add row
+        </button>
 
-      <div>
         {values.articles.map((article, idx) => (
-          <div key={idx}>
+          <React.Fragment key={idx}>
             {articlesHeader.map((column) => (
               <input
+                className={`${
+                  column.name === "name" ? "col-span-6" : "col-span-2"
+                }`}
                 type={column.type}
                 key={column.name}
                 value={article[column.name]}
@@ -27,7 +37,8 @@ const ArticlesDetails: React.FC = () => {
                 onChange={handleChange}
               />
             ))}
-          </div>
+            <button className="col-span-2">borrar</button>
+          </React.Fragment>
         ))}
       </div>
     </section>
