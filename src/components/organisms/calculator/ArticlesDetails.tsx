@@ -3,7 +3,7 @@ import { articlesHeader } from "../../../constants/calculator";
 import { useCalculator } from "../../../hooks/useCalculator";
 
 const ArticlesDetails: React.FC = () => {
-  const { values, handleChange, addRow } = useCalculator();
+  const { values, handleChange, addRow, deleteRow } = useCalculator();
   return (
     <section className="w-full rounded-md border p-2">
       <h5>Detalle de Artículos</h5>
@@ -37,7 +37,9 @@ const ArticlesDetails: React.FC = () => {
                 onChange={handleChange}
               />
             ))}
-            <button className="col-span-2">borrar</button>
+            <button className="col-span-2" onClick={() => deleteRow(idx)}>
+              borrar
+            </button>
           </React.Fragment>
         ))}
       </div>

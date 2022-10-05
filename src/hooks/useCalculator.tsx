@@ -12,6 +12,7 @@ interface Context {
   reset: () => void;
   handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   addRow: () => void;
+  deleteRow: (index: number) => void;
 }
 
 const CalculatorContext = createContext<Context>({} as Context);
@@ -51,6 +52,17 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
   };
 
   /**
+   * Method used to delete an entire article information
+   * @param index index number of the article to delete
+   */
+  const deleteRow = (index: number) => {
+    const articles = values.articles.slice();
+    articles.splice(index, 1);
+
+    setValues({ ...values, articles });
+  };
+
+  /**
    * Add a new article row
    */
   const addRow = () => {
@@ -65,6 +77,7 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
     reset,
     handleChange,
     addRow,
+    deleteRow,
   };
   return (
     <CalculatorContext.Provider value={contextValue}>
