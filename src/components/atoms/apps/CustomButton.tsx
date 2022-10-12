@@ -5,7 +5,7 @@ interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   icon?: React.ReactNode;
   iconPosition?: "start" | "end";
 }
-const AppButton: React.FC<Props> = ({
+const CustomButton: React.FC<Props> = ({
   children,
   icon,
   iconPosition = "start",
@@ -23,4 +23,4 @@ const AppButton: React.FC<Props> = ({
   );
 };
 
-export default AppButton;
+export default CustomButton;
