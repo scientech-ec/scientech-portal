@@ -1,6 +1,7 @@
 import produce from "immer";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { calculatorInitialValues, newArticle } from "../constants/calculator";
+import { loadFromLocalStorage } from "../helpers/loadFromLocalStorage";
 import type { Calculator } from "../interfaces/calculatorApp";
 
 interface Props {
@@ -11,6 +12,7 @@ interface Context {
   values: Calculator;
   reset: () => void;
   handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+
   addRow: () => void;
   deleteRow: (index: number) => void;
 }
@@ -18,7 +20,13 @@ interface Context {
 const CalculatorContext = createContext<Context>({} as Context);
 
 export const CalculatorProvider: React.FC<Props> = ({ children }) => {
-  const [values, setValues] = useState(calculatorInitialValues);
+  const [values, setValues] = useState<Calculator>(
+    loadFromLocalStorage("calculator", calculatorInitialValues)
+  );
+
+  useEffect(() => {
+    setValues(loadFromLocalStorage("calculator", calculatorInitialValues));
+  }, []);
 
   /** Stores in local storage to prevent data lost */
   useEffect(() => {
