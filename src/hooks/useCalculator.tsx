@@ -24,6 +24,7 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
     loadFromLocalStorage("calculator", calculatorInitialValues)
   );
 
+  /** Load data from local storage */
   useEffect(() => {
     setValues(loadFromLocalStorage("calculator", calculatorInitialValues));
   }, []);
