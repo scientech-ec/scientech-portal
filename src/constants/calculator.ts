@@ -56,3 +56,29 @@ export const calculatorInitialValues: Calculator = {
   },
   articles: [newArticle()],
 };
+
+export const lotSchema = [
+  {
+    title: "Costos en Origen",
+    values: [
+      { name: "Flete en origen:", value: "originFleet" },
+      { name: "Impuestos en origen:", value: "originTaxes" },
+    ],
+  },
+  {
+    title: "Costos de Importación",
+    values: [
+      { name: "Costo de flete [USD/lb]:", value: "importFleetPerLibre" },
+      { name: "Trámite de importación:", value: "importProcedure" },
+      { name: "Agente aduanero:", value: "customsAgent" },
+    ],
+  },
+  {
+    title: "Costos Locales",
+    values: [
+      { name: "Flete y movilización:", value: "localFleet" },
+      { name: "Tarifas bancarias:", value: "bankExpenses" },
+    ],
+  },
+];
+export type LotSchema = typeof lotSchema;
