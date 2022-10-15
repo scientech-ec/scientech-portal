@@ -1,5 +1,5 @@
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import React from "react";
+import React, { useEffect } from "react";
 import { BsArrowLeftCircle } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import * as Realm from "realm-web";
@@ -24,9 +24,11 @@ const LoginPage: React.FC = () => {
   const navigate = useNavigate();
   const { logIn, currentUser } = useRealmApp();
 
-  if (currentUser && currentUser.isLoggedIn) {
-    navigate(protectedRoutes.dashboard.target);
-  }
+  useEffect(() => {
+    if (currentUser && currentUser.isLoggedIn) {
+      navigate(protectedRoutes.dashboard.target);
+    }
+  }, [currentUser]);
 
   return (
     <main className="flex h-screen w-screen items-center justify-center bg-slate-50 px-6">
