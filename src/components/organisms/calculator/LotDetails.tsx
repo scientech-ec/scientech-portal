@@ -32,7 +32,8 @@ const loadLotData = (source: typeof lotData, calculatorData: Calculator) =>
   source.map((data) => ({
     title: data.title,
     values: data.values.map((value) => ({
-      name: value.name,
+      label: value.name,
+      name: value.value,
       value: calculatorData.lot[value.value],
     })),
   }));
@@ -40,6 +41,7 @@ const loadLotData = (source: typeof lotData, calculatorData: Calculator) =>
 const LotDetails: React.FC = () => {
   const { values } = useCalculator();
   const lotObject = loadLotData(lotData, values);
+
   return (
     <section className="w-full rounded-md border p-2">
       <h5>Detalle de Lote</h5>

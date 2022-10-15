@@ -51,6 +51,9 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
           draft.articles[parseInt(pathArray[1])][pathArray[2]] =
             pathArray[2] === "name" ? value : parseInt(value);
         }
+        if (pathArray.includes("lot")) {
+          draft.lot[pathArray[1]] = parseInt(value);
+        }
       })
     );
   };
