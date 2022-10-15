@@ -5,14 +5,13 @@ import type {
 } from "../interfaces/calculatorApp";
 
 export const articlesHeader: ArticlesHeader[] = [
-  { name: "qty", type: "number", title: "Cant.", initialValue: 0 },
+  { name: "qty", type: "number", title: "Cant.", initialValue: 1 },
   { name: "name", type: "text", title: "Descripción", initialValue: "" },
-  { name: "tariff", type: "number", title: "Arancel", initialValue: 0 },
   {
     name: "unitWeight",
     type: "number",
     title: "Peso Unitario",
-    initialValue: 0,
+    initialValue: 1,
   },
   {
     name: "unitPrice",
@@ -20,6 +19,7 @@ export const articlesHeader: ArticlesHeader[] = [
     title: "Precio Unitario",
     initialValue: 0,
   },
+  { name: "tariffRate", type: "number", title: "Arancel", initialValue: 0 },
   { name: "margin", type: "number", title: "Margen", initialValue: 0 },
   { name: "bunchCost", type: "number", title: "Costo Lote", initialValue: 0 },
   {

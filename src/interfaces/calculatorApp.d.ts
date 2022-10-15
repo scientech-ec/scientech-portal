@@ -13,7 +13,7 @@ export type ArticleData = {
   [key: string]: number | string;
   qty: number;
   name: string;
-  tariff: number;
+  tariffRate: number;
   unitWeight: number;
   unitPrice: number;
   margin: number;
@@ -32,4 +32,15 @@ export type ArticlesHeader = {
   type: string;
   title: string;
   initialValue: number | string;
+};
+
+export type CalculationValues = {
+  itemWeight: number;
+  EXW: number;
+  weightFraction: number;
+  FOB: number;
+  ISD: number;
+  CIF: number;
+  FODINFA: number;
+  tariff: number;
 };

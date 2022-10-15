@@ -1,6 +1,7 @@
 import produce from "immer";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { calculatorInitialValues, newArticle } from "../constants/calculator";
+import { calculateImportation } from "../functions/importCalculator";
 import { loadFromLocalStorage } from "../helpers/loadFromLocalStorage";
 import type { Calculator } from "../interfaces/calculatorApp";
 
@@ -12,12 +13,16 @@ interface Context {
   values: Calculator;
   reset: () => void;
   handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-
   addRow: () => void;
   deleteRow: (index: number) => void;
+  compute: () => void;
 }
 
 const CalculatorContext = createContext<Context>({} as Context);
+
+// todo: Add total weight auto compute
+// todo: 0 total weight constriction
+// todo: min value 1 for qty
 
 export const CalculatorProvider: React.FC<Props> = ({ children }) => {
   const [values, setValues] = useState<Calculator>(
@@ -79,12 +84,24 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
     }));
   };
 
+  const compute = () => {
+    if (values.articles.length === 0 || Object.keys(values.lot).length === 0)
+      return;
+
+    const articles = calculateImportation(values);
+
+    if (articles) {
+      setValues({ ...values, articles: [...articles] });
+    }
+  };
+
   const contextValue = {
     values,
     reset,
     handleChange,
     addRow,
     deleteRow,
+    compute,
   };
   return (
     <CalculatorContext.Provider value={contextValue}>
