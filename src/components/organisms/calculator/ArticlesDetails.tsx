@@ -1,9 +1,10 @@
 import React from "react";
 import { articlesHeader } from "../../../constants/calculator";
 import { useCalculator } from "../../../hooks/useCalculator";
+import ArticleRow from "../../molecules/calculator/ArticleRow";
 
 const ArticlesDetails: React.FC = () => {
-  const { values, handleChange, addRow, deleteRow } = useCalculator();
+  const { values, addRow } = useCalculator();
   return (
     <section className="w-full rounded-md border p-2">
       <h5>Detalle de Artículos</h5>
@@ -24,23 +25,7 @@ const ArticlesDetails: React.FC = () => {
         </button>
 
         {values.articles.map((article, idx) => (
-          <React.Fragment key={idx}>
-            {articlesHeader.map((column) => (
-              <input
-                className={`${
-                  column.name === "name" ? "col-span-6" : "col-span-2"
-                }`}
-                type={column.type}
-                key={column.name}
-                value={article[column.name]}
-                name={`articles.${idx}.${column.name}`}
-                onChange={handleChange}
-              />
-            ))}
-            <button className="col-span-2" onClick={() => deleteRow(idx)}>
-              borrar
-            </button>
-          </React.Fragment>
+          <ArticleRow article={article} index={idx} key={idx} />
         ))}
       </div>
     </section>
