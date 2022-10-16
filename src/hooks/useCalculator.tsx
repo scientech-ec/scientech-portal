@@ -4,6 +4,8 @@ import { calculatorInitialValues, newArticle } from "../constants/calculator";
 import { calculateImportation } from "../functions/importCalculator";
 import { loadFromLocalStorage } from "../helpers/loadFromLocalStorage";
 import type { Calculator } from "../interfaces/calculatorApp";
+import { importCalculatorConfig } from "../services/mongoDB/importCalculatorConfig";
+import { useMongo } from "./useMongo";
 
 interface Props {
   children: React.ReactNode;
@@ -11,11 +13,12 @@ interface Props {
 
 interface Context {
   values: Calculator;
-  reset: () => void;
+  reset: VoidFunction;
   handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  addRow: () => void;
+  addRow: VoidFunction;
   deleteRow: (index: number) => void;
-  compute: () => void;
+  compute: VoidFunction;
+  save: VoidFunction;
 }
 
 const CalculatorContext = createContext<Context>({} as Context);
@@ -25,6 +28,7 @@ const CalculatorContext = createContext<Context>({} as Context);
 // todo: min value 1 for qty
 
 export const CalculatorProvider: React.FC<Props> = ({ children }) => {
+  const mongo = useMongo(importCalculatorConfig);
   const [values, setValues] = useState<Calculator>(
     loadFromLocalStorage("calculator", calculatorInitialValues)
   );
@@ -84,6 +88,9 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
     }));
   };
 
+  /**
+   * Compute articles prices based on given inputs
+   */
   const compute = () => {
     if (values.articles.length === 0 || Object.keys(values.lot).length === 0)
       return;
@@ -95,6 +102,32 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
     }
   };
 
+  /**
+   * Saves the current calculations in the cloud
+   */
+  const save = async () => {
+    const existing = await mongo.find({ _id: values._id });
+
+    if (existing.length === 0) {
+      try {
+        await mongo.insertOne(values);
+        reset();
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      try {
+        await mongo.updateOne(
+          { _id: values._id },
+          { $set: { articles: values.articles, lot: values.lot } }
+        );
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    return;
+  };
+
   const contextValue = {
     values,
     reset,
@@ -102,6 +135,7 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
     addRow,
     deleteRow,
     compute,
+    save,
   };
   return (
     <CalculatorContext.Provider value={contextValue}>
