@@ -61,8 +61,8 @@ export const lotSchema = [
   {
     title: "Costos en Origen",
     values: [
-      { name: "Flete en origen:", value: "originFleet" },
       { name: "Impuestos en origen:", value: "originTaxes" },
+      { name: "Flete en origen:", value: "originFleet" },
     ],
   },
   {
