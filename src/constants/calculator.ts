@@ -1,3 +1,4 @@
+import { BSON } from "realm-web";
 import type {
   ArticleData,
   ArticlesHeader,
@@ -55,6 +56,7 @@ export const calculatorInitialValues: Calculator = {
     bankExpenses: 0,
   },
   articles: [newArticle()],
+  _id: new BSON.ObjectId(),
 };
 
 export const lotSchema = [

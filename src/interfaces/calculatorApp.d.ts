@@ -25,6 +25,7 @@ export type ArticleData = {
 export type Calculator = {
   lot: LotCost;
   articles: ArticleData[];
+  _id: BSON.ObjectID;
 };
 
 export type ArticlesHeader = {
