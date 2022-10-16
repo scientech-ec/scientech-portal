@@ -5,6 +5,8 @@ import type {
   Calculator,
 } from "../interfaces/calculatorApp";
 
+type ArticlesType = ArticleData & CalculationValues;
+
 export const calculateImportation = (values: Calculator) => {
   const ISDTax = 0.05;
   const fodinfaTax = 0.005;
@@ -23,59 +25,51 @@ export const calculateImportation = (values: Calculator) => {
     },
   } = values;
 
-  const articles: ArticleData[] = articlesSource.map((article) => ({
-    ...article,
-  }));
-
-  const articlesCalculation = new Array(values.articles.length).fill(
-    {}
-  ) as CalculationValues[];
+  const articles: ArticlesType[] = articlesSource.map(
+    (article) =>
+      ({
+        ...article,
+      } as ArticlesType)
+  );
 
   let totalWeight = 0;
   let totalFOB = 0;
 
-  articles.forEach((item, index) => {
-    const current = articlesCalculation[index];
+  articles.forEach((item) => {
+    item.itemWeight = item.qty * item.unitWeight;
+    item.EXW = (item.qty * item.unitPrice * (100 + originTaxes)) / 100;
 
-    current.itemWeight = item.qty * item.unitWeight;
-    current.EXW = (item.qty * item.unitPrice * (100 + originTaxes)) / 100;
-
-    totalWeight += current.itemWeight;
+    if (item.EXW > 0) {
+      totalWeight += item.itemWeight;
+    }
   });
 
   // Calculate aux lot variables
   const internationalFleet = totalWeight * importFleetPerLibre;
   const baseCourier = importProcedure + internationalFleet + customsAgent;
 
-  articles.forEach((item, index) => {
-    const current = articlesCalculation[index];
-
-    current.weightFraction = current.itemWeight / totalWeight;
+  articles.forEach((item) => {
+    item.weightFraction = item.EXW > 0 ? item.itemWeight / totalWeight : 0;
 
     // Calculate aux FOB item values
-    current.FOB = current.EXW + originFleet * current.weightFraction;
-    current.ISD = current.FOB * ISDTax;
+    item.FOB = originFleet * item.weightFraction + item.EXW;
+    item.ISD = item.FOB * ISDTax;
 
     // Calculate aux CIF item values
-    current.CIF =
-      (current.FOB + internationalFleet * current.weightFraction) * 1.01;
-    current.FODINFA = current.CIF * fodinfaTax;
-    current.tariff = (current.CIF * item.tariffRate) / 100;
+    item.CIF = (item.FOB + internationalFleet * item.weightFraction) * 1.01;
+    item.FODINFA = item.CIF * fodinfaTax;
+    item.tariff = (item.CIF * item.tariffRate) / 100;
 
     // Asign values to lot variables
-    totalFOB += current.FOB;
+    totalFOB += item.FOB;
   });
 
-  articles.forEach((item, index) => {
-    const current = articlesCalculation[index];
-
+  articles.forEach((item) => {
     const originCosts =
-      totalFOB === 0
-        ? 0
-        : current.FOB + (bankExpenses * current.FOB) / totalFOB;
-    const itemTaxes = current.ISD + current.FODINFA + current.tariff;
-    const importCost = baseCourier * current.weightFraction;
-    const localFleetCost = (localFleet / IVARate) * current.weightFraction;
+      totalFOB === 0 ? 0 : item.FOB + (bankExpenses * item.FOB) / totalFOB;
+    const itemTaxes = item.ISD + item.FODINFA + item.tariff;
+    const importCost = baseCourier * item.weightFraction;
+    const localFleetCost = (localFleet / IVARate) * item.weightFraction;
 
     const itemCost = originCosts + itemTaxes + importCost;
     const profit = itemCost / (1 - item.margin / 100) - itemCost;

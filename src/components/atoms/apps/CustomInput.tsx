@@ -17,6 +17,8 @@ const CustomInput: React.FC<Props> = ({
 
   const minValue = type === "number" ? { min: 0 } : null;
 
+  const step = type === "number" ? { step: 0.01 } : null;
+
   const nanAlert =
     type === "number" && typeof value === "number" && isNaN(value)
       ? "bg-red-500"
@@ -28,6 +30,7 @@ const CustomInput: React.FC<Props> = ({
       value={value}
       onChange={handleChange}
       {...minValue}
+      {...step}
       {...rest}
     />
   );

@@ -54,10 +54,10 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
       produce((draft) => {
         if (pathArray.includes("articles")) {
           draft.articles[parseInt(pathArray[1])][pathArray[2]] =
-            pathArray[2] === "name" ? value : parseInt(value);
+            pathArray[2] === "name" ? value : parseFloat(value);
         }
         if (pathArray.includes("lot")) {
-          draft.lot[pathArray[1]] = parseInt(value);
+          draft.lot[pathArray[1]] = parseFloat(value);
         }
       })
     );
