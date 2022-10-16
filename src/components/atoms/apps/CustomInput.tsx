@@ -25,6 +25,7 @@ const CustomInput: React.FC<Props> = ({
       : "";
   return (
     <input
+      onFocus={(e) => e.target.select()}
       className={`rounded-md border ${className} ${nanAlert}`}
       type={type}
       value={value}
