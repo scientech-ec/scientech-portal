@@ -3,7 +3,7 @@ import { FaUserCircle } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import underConstruction from "../../assets/under-construction.jpg";
 import { login } from "../../helpers/routes";
-import Scientech from "../atoms/logos/Scientech";
+import Scientech from "../atoms/svg/Scientech";
 
 const UnderConstruction: React.FC = () => {
   return (
