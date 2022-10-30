@@ -3,7 +3,11 @@ export const loadFromLocalStorage = (
   fallback: any
 ): typeof fallback => {
   const storedData = localStorage.getItem(item);
-  if (storedData !== null) {
+  if (
+    storedData !== null &&
+    storedData !== "undefined" &&
+    storedData !== "null"
+  ) {
     return JSON.parse(storedData);
   }
 
