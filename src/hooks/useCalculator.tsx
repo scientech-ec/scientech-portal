@@ -1,9 +1,9 @@
 import produce from "immer";
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { calculatorInitialValues, newArticle } from "../constants/calculator";
+import { setInitialValues } from "../constants/calculator";
 import { calculateImportation } from "../functions/importCalculator";
 import { loadFromLocalStorage } from "../helpers/loadFromLocalStorage";
-import type { Calculator } from "../interfaces/calculatorApp";
+import type { Calculator, DocumentHeader } from "../interfaces/calculatorApp";
 import { importCalculatorConfig } from "../services/mongoDB/importCalculatorConfig";
 import { useMongo } from "./useMongo";
 
@@ -13,12 +13,12 @@ interface Props {
 
 interface Context {
   values: Calculator;
-  reset: VoidFunction;
   handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  addRow: VoidFunction;
+  updateDocumentHeader: (event: React.ChangeEvent<HTMLInputElement>) => void;
   deleteRow: (index: number) => void;
   compute: VoidFunction;
   save: VoidFunction;
+  documentInfo: DocumentHeader;
 }
 
 const CalculatorContext = createContext<Context>({} as Context);
@@ -29,22 +29,19 @@ const CalculatorContext = createContext<Context>({} as Context);
 
 export const CalculatorProvider: React.FC<Props> = ({ children }) => {
   const mongo = useMongo(importCalculatorConfig);
+
+  const { calculator, header } = setInitialValues();
   const [values, setValues] = useState<Calculator>(
-    loadFromLocalStorage("calculator", calculatorInitialValues)
+    loadFromLocalStorage("calculator", calculator)
+  );
+  const [documentInfo, setDocumentInfo] = useState<DocumentHeader>(
+    loadFromLocalStorage("header", header)
   );
 
-  /** Stores in local storage to prevent data lost */
+  /** Stores in  local storage to prevent calculator data lost */
   useEffect(() => {
     localStorage.setItem("calculator", JSON.stringify(values));
   }, [values]);
-
-  /**
-   * Reset calculator
-   */
-  const reset = () => {
-    localStorage.setItem("calculator", JSON.stringify(calculatorInitialValues));
-    setValues(calculatorInitialValues);
-  };
 
   /**
    * Stores the data in the calculator object
@@ -68,6 +65,16 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
   };
 
   /**
+   * Updates document information for referrence
+   * @param event Input event handler
+   */
+  const updateDocumentHeader = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value, name } = event.target;
+
+    setDocumentInfo({ ...documentInfo, [name]: value });
+  };
+
+  /**
    * Method used to delete an entire article information
    * @param index index number of the article to delete
    */
@@ -76,16 +83,6 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
     articles.splice(index, 1);
 
     setValues({ ...values, articles });
-  };
-
-  /**
-   * Add a new article row
-   */
-  const addRow = () => {
-    setValues((prevState) => ({
-      ...prevState,
-      articles: [...prevState.articles, newArticle()],
-    }));
   };
 
   /**
@@ -106,36 +103,35 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
    * Saves the current calculations in the cloud
    */
   const save = async () => {
-    const existing = await mongo.find({ _id: values._id });
-
-    if (existing.length === 0) {
-      try {
-        await mongo.insertOne(values);
-        reset();
-      } catch (error) {
-        console.error(error);
-      }
-    } else {
-      try {
-        await mongo.updateOne(
-          { _id: values._id },
-          { $set: { articles: values.articles, lot: values.lot } }
-        );
-      } catch (error) {
-        console.error(error);
-      }
-    }
-    return;
+    // const existing = await mongo.find({ _id: values._id });
+    // if (existing.length === 0) {
+    //   try {
+    //     await mongo.insertOne(values);
+    //     reset();
+    //   } catch (error) {
+    //     console.error(error);
+    //   }
+    // } else {
+    //   try {
+    //     await mongo.updateOne(
+    //       { _id: values._id },
+    //       { $set: { articles: values.articles, lot: values.lot } }
+    //     );
+    //   } catch (error) {
+    //     console.error(error);
+    //   }
+    // }
+    // return;
   };
 
   const contextValue = {
     values,
-    reset,
     handleChange,
-    addRow,
+    updateDocumentHeader,
     deleteRow,
     compute,
     save,
+    documentInfo,
   };
   return (
     <CalculatorContext.Provider value={contextValue}>

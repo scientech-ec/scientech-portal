@@ -45,3 +45,10 @@ export type CalculationValues = {
   FODINFA: number;
   tariff: number;
 };
+
+export type DocumentHeader = {
+  name: string;
+  description: string;
+  document_id?: BSON.ObjectID;
+  articlesQty: number;
+};
