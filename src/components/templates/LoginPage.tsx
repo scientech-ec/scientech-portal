@@ -6,7 +6,7 @@ import * as Realm from "realm-web";
 import * as Yup from "yup";
 import { protectedRoutes } from "../../helpers/routes";
 import { useRealmApp } from "../../hooks/useRealmApp";
-import Scientech from "../atoms/logos/Scientech";
+import Scientech from "../atoms/svg/Scientech";
 
 export const initialValues = {
   email: "",
