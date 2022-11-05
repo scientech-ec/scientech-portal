@@ -1,10 +1,14 @@
 import produce from "immer";
 import React, { createContext, useContext, useEffect, useState } from "react";
+import { BSON } from "realm-web";
 import { setInitialValues } from "../constants/calculator";
 import { calculateImportation } from "../functions/importCalculator";
 import { loadFromLocalStorage } from "../helpers/loadFromLocalStorage";
 import type { Calculator, DocumentHeader } from "../interfaces/calculatorApp";
-import { importCalculatorConfig } from "../services/mongoDB/importCalculatorConfig";
+import {
+  importCalculatorData,
+  importCalculatorHeader,
+} from "../services/mongoDB/importCalculatorConfig";
 import { useMongo } from "./useMongo";
 
 interface Props {
@@ -17,7 +21,7 @@ interface Context {
   updateDocumentHeader: (event: React.ChangeEvent<HTMLInputElement>) => void;
   deleteRow: (index: number) => void;
   compute: VoidFunction;
-  save: VoidFunction;
+  saveAs: VoidFunction;
   documentInfo: DocumentHeader;
 }
 
@@ -28,7 +32,8 @@ const CalculatorContext = createContext<Context>({} as Context);
 // todo: min value 1 for qty
 
 export const CalculatorProvider: React.FC<Props> = ({ children }) => {
-  const mongo = useMongo(importCalculatorConfig);
+  const dataMongo = useMongo(importCalculatorData);
+  const headerMongo = useMongo(importCalculatorHeader);
 
   const { calculator, header } = setInitialValues();
   const [values, setValues] = useState<Calculator>(
@@ -99,29 +104,31 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
     }
   };
 
+  const reset = () => {
+    const { calculator, header } = setInitialValues();
+    setValues(calculator);
+    setDocumentInfo(header);
+  };
+
   /**
    * Saves the current calculations in the cloud
    */
-  const save = async () => {
-    // const existing = await mongo.find({ _id: values._id });
-    // if (existing.length === 0) {
-    //   try {
-    //     await mongo.insertOne(values);
-    //     reset();
-    //   } catch (error) {
-    //     console.error(error);
-    //   }
-    // } else {
-    //   try {
-    //     await mongo.updateOne(
-    //       { _id: values._id },
-    //       { $set: { articles: values.articles, lot: values.lot } }
-    //     );
-    //   } catch (error) {
-    //     console.error(error);
-    //   }
-    // }
-    // return;
+  const saveAs = async () => {
+    const newDocId = new BSON.ObjectId();
+
+    setDocumentInfo((prevState) => ({
+      ...prevState,
+      documentData_ID: newDocId,
+    }));
+    setValues((prevState) => ({ ...prevState, _id: newDocId }));
+
+    try {
+      await headerMongo.insertOne(documentInfo);
+      await dataMongo.insertOne(values);
+      reset();
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const contextValue = {
@@ -130,7 +137,7 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
     updateDocumentHeader,
     deleteRow,
     compute,
-    save,
+    saveAs,
     documentInfo,
   };
   return (

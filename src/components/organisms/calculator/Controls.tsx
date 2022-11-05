@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useCalculator } from "../../../hooks/useCalculator";
 import CustomButton from "../../atoms/apps/CustomButton";
 import Modal from "../../atoms/Modal";
+import SaveDocument from "./SaveDocument";
 
 const Controls: React.FC = () => {
   const { compute } = useCalculator();
@@ -28,7 +29,7 @@ const Controls: React.FC = () => {
         handleClose={() => setSaveModal(false)}
         title="Guardar?"
       >
-        here you can save
+        <SaveDocument handleClose={() => setSaveModal(false)} />
       </Modal>
 
       <Modal

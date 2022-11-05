@@ -25,7 +25,7 @@ export type ArticleData = {
 export type Calculator = {
   lot: LotCost;
   articles: ArticleData[];
-  _id: BSON.ObjectID;
+  _id?: BSON.ObjectID;
 };
 
 export type ArticlesHeader = {
@@ -49,6 +49,6 @@ export type CalculationValues = {
 export type DocumentHeader = {
   name: string;
   description: string;
-  document_id?: BSON.ObjectID;
+  documentData_id?: BSON.ObjectID;
   articlesQty: number;
 };
