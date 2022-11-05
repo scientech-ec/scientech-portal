@@ -1,7 +1,7 @@
 import produce from "immer";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { BSON } from "realm-web";
-import { setInitialValues } from "../constants/calculator";
+import { addArticle, setInitialValues } from "../constants/calculator";
 import { calculateImportation } from "../functions/importCalculator";
 import { loadFromLocalStorage } from "../helpers/loadFromLocalStorage";
 import type { Calculator, DocumentHeader } from "../interfaces/calculatorApp";
@@ -19,9 +19,11 @@ interface Context {
   values: Calculator;
   handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   updateDocumentHeader: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  addRow: VoidFunction;
   deleteRow: (index: number) => void;
   compute: VoidFunction;
   saveAs: VoidFunction;
+  update: VoidFunction;
   documentInfo: DocumentHeader;
 }
 
@@ -80,6 +82,16 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
   };
 
   /**
+   * Add a new row to the current calculation
+   */
+  const addRow = () => {
+    setValues((prevState) => ({
+      ...prevState,
+      articles: [...prevState.articles, addArticle()],
+    }));
+  };
+
+  /**
    * Method used to delete an entire article information
    * @param index index number of the article to delete
    */
@@ -104,6 +116,9 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
     }
   };
 
+  /**
+   * Reset current document values
+   */
   const reset = () => {
     const { calculator, header } = setInitialValues();
     setValues(calculator);
@@ -111,7 +126,7 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
   };
 
   /**
-   * Saves the current calculations in the cloud
+   * Save the current calculations in the cloud
    */
   const saveAs = async () => {
     const newDocId = new BSON.ObjectId();
@@ -131,13 +146,26 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
     }
   };
 
+  /**
+   * Update the existant document in the cloud
+   */
+  const update = () => {
+    console.log("values", values);
+    console.log("documentInfo", documentInfo);
+
+    console.log("_id" in values);
+    console.log("documentData_ID" in documentInfo);
+  };
+
   const contextValue = {
     values,
     handleChange,
     updateDocumentHeader,
+    addRow,
     deleteRow,
     compute,
     saveAs,
+    update,
     documentInfo,
   };
   return (

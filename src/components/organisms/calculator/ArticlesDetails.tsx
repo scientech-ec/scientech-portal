@@ -4,7 +4,7 @@ import { useCalculator } from "../../../hooks/useCalculator";
 import ArticleRow from "../../molecules/calculator/ArticleRow";
 
 const ArticlesDetails: React.FC = () => {
-  const { values } = useCalculator();
+  const { values, addRow } = useCalculator();
   return (
     <section className="w-full rounded-md border p-2">
       <h5>Detalle de Artículos</h5>
@@ -20,7 +20,9 @@ const ArticlesDetails: React.FC = () => {
             {column.title}
           </p>
         ))}
-        <button className="col-span-2">Add row</button>
+        <button className="col-span-2" onClick={addRow}>
+          Add row
+        </button>
 
         {values.articles.map((article, idx) => (
           <ArticleRow article={article} index={idx} key={idx} />

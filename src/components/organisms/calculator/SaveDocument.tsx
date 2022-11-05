@@ -7,7 +7,8 @@ interface Props {
 }
 
 const SaveDocument: React.FC<Props> = ({ handleClose }) => {
-  const { updateDocumentHeader, documentInfo, saveAs } = useCalculator();
+  const { updateDocumentHeader, documentInfo, saveAs, update } =
+    useCalculator();
 
   const handleSaveAs = () => {
     saveAs();
@@ -15,6 +16,7 @@ const SaveDocument: React.FC<Props> = ({ handleClose }) => {
   };
 
   const handleSave = () => {
+    update();
     handleClose();
   };
   return (
