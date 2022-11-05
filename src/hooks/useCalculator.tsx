@@ -97,6 +97,12 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
     }));
 
     // todo: Increase article counter on header document
+
+    setDocumentInfo(
+      produce((draft) => {
+        draft.articlesQty += 1;
+      })
+    );
   };
 
   /**
@@ -110,6 +116,11 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
     setValues({ ...values, articles });
 
     // todo: Decrease article counter on header document
+    setDocumentInfo(
+      produce((draft) => {
+        draft.articlesQty -= 1;
+      })
+    );
   };
 
   /**
