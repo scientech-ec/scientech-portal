@@ -95,6 +95,8 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
       ...prevState,
       articles: [...prevState.articles, addArticle()],
     }));
+
+    // todo: Increase article counter on header document
   };
 
   /**
@@ -106,6 +108,8 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
     articles.splice(index, 1);
 
     setValues({ ...values, articles });
+
+    // todo: Decrease article counter on header document
   };
 
   /**
@@ -135,14 +139,6 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
    * Save the current calculations in the cloud
    */
   const saveAs = async () => {
-    const newDocId = new BSON.ObjectId();
-
-    setDocumentInfo((prevState) => ({
-      ...prevState,
-      documentData_ID: newDocId,
-    }));
-    setValues((prevState) => ({ ...prevState, _id: newDocId }));
-
     try {
       await headerMongo.insertOne(documentInfo);
       await dataMongo.insertOne(values);
@@ -160,27 +156,37 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
       return;
     }
 
+    let headerId = documentInfo._id;
+    let documentDataId = documentInfo.documentData_Id;
+    const { _id, ...headerRest } = documentInfo;
+
+    if (typeof headerId === "string") {
+      headerId = new BSON.ObjectID(headerId);
+    }
+
+    if (typeof documentDataId === "string") {
+      documentDataId = new BSON.ObjectID(documentDataId);
+    }
+
     const existingDocuments = await dataMongo.find({
-      _id: documentInfo.documentData_id,
+      _id: documentDataId,
     });
+
     if (existingDocuments.length === 0) {
       try {
-        setValues((prevState) => ({
-          ...prevState,
-          _id: documentInfo.documentData_id,
-        }));
         await dataMongo.insertOne(values);
-        await headerMongo.updateOne({ _id: documentInfo._id }, documentInfo);
+        await headerMongo.updateOne({ _id: headerId }, { $set: headerRest });
       } catch (error) {
         console.error(error);
       }
     } else {
       try {
         await dataMongo.updateOne(
-          { _id: values._id },
+          { _id: documentDataId },
           { $set: { articles: values.articles, lot: values.lot } }
         );
-        await headerMongo.updateOne({ _id: documentInfo._id }, documentInfo);
+
+        await headerMongo.updateOne({ _id: headerId }, { $set: headerRest });
       } catch (error) {
         console.error(error);
       }
