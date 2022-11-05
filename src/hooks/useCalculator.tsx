@@ -50,6 +50,11 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
     localStorage.setItem("calculator", JSON.stringify(values));
   }, [values]);
 
+  /** Stores in  local storage to prevent calculator data lost */
+  useEffect(() => {
+    localStorage.setItem("header", JSON.stringify(documentInfo));
+  }, [documentInfo]);
+
   /**
    * Stores the data in the calculator object
    * @param event Input event handler
