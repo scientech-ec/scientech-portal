@@ -51,4 +51,5 @@ export type DocumentHeader = {
   description: string;
   documentData_id?: BSON.ObjectID;
   articlesQty: number;
+  _id: BSON.ObjectID;
 };

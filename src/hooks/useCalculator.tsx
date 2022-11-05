@@ -145,7 +145,6 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
     try {
       await headerMongo.insertOne(documentInfo);
       await dataMongo.insertOne(values);
-      reset();
     } catch (error) {
       console.error(error);
     }
@@ -154,12 +153,38 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
   /**
    * Update the existant document in the cloud
    */
-  const update = () => {
-    console.log("values", values);
-    console.log("documentInfo", documentInfo);
+  const update = async () => {
+    if (!("documentData_Id" in documentInfo)) {
+      saveAs();
+      return;
+    }
 
-    console.log("_id" in values);
-    console.log("documentData_ID" in documentInfo);
+    const existingDocuments = await dataMongo.find({
+      _id: documentInfo.documentData_id,
+    });
+    if (existingDocuments.length === 0) {
+      try {
+        setValues((prevState) => ({
+          ...prevState,
+          _id: documentInfo.documentData_id,
+        }));
+        await dataMongo.insertOne(values);
+        await headerMongo.updateOne({ _id: documentInfo._id }, documentInfo);
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      try {
+        await dataMongo.updateOne(
+          { _id: values._id },
+          { $set: { articles: values.articles, lot: values.lot } }
+        );
+        await headerMongo.updateOne({ _id: documentInfo._id }, documentInfo);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    return;
   };
 
   const contextValue = {
