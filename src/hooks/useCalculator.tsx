@@ -24,6 +24,7 @@ interface Context {
   compute: VoidFunction;
   saveAs: VoidFunction;
   update: VoidFunction;
+  reset: VoidFunction;
   documentInfo: DocumentHeader;
 }
 
@@ -196,6 +197,7 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
     compute,
     saveAs,
     update,
+    reset,
     documentInfo,
   };
   return (

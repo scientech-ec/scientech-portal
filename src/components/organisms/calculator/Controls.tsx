@@ -5,7 +5,7 @@ import Modal from "../../atoms/Modal";
 import SaveDocument from "./SaveDocument";
 
 const Controls: React.FC = () => {
-  const { compute } = useCalculator();
+  const { compute, reset } = useCalculator();
   const [saveModal, setSaveModal] = useState(false);
   const [retrieveModal, setRetrieveModal] = useState(false);
 
@@ -15,7 +15,7 @@ const Controls: React.FC = () => {
         <h4 className="">Calculadora de Importaciones</h4>
         <div className="grid grid-cols-4 gap-2">
           <CustomButton onClick={compute}>Calcular</CustomButton>
-          <CustomButton>Nuevo</CustomButton>
+          <CustomButton onClick={reset}>Nuevo</CustomButton>
           <CustomButton onClick={() => setSaveModal(true)}>
             Guardar
           </CustomButton>
