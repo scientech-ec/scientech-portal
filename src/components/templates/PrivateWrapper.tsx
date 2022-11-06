@@ -1,3 +1,4 @@
+import jwtDecode from "jwt-decode";
 import React, { useEffect } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { protectedRoutes } from "../../helpers/routes";
@@ -11,9 +12,22 @@ const PrivateWrapper: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!currentUser || !currentUser.isLoggedIn) {
-      navigate("/login");
-    }
+    const verifyToken = async () => {
+      if (!currentUser) {
+        navigate("/login");
+      }
+
+      if (currentUser.accessToken) {
+        const { exp } = jwtDecode(currentUser.accessToken);
+        const isExpired = Date.now() >= exp * 1000;
+
+        if (isExpired) {
+          navigate("/login");
+        }
+      }
+    };
+
+    verifyToken();
   }, [currentUser]);
 
   useEffect(() => {
