@@ -10,6 +10,7 @@ import {
   importCalculatorHeader,
 } from "../services/mongoDB/importCalculatorConfig";
 import { useMongo } from "./useMongo";
+import { useRealmApp } from "./useRealmApp";
 
 interface Props {
   children: React.ReactNode;
@@ -35,6 +36,7 @@ const CalculatorContext = createContext<Context>({} as Context);
 // todo: min value 1 for qty
 
 export const CalculatorProvider: React.FC<Props> = ({ children }) => {
+  const { refreshToken } = useRealmApp();
   const dataMongo = useMongo(importCalculatorData);
   const headerMongo = useMongo(importCalculatorHeader);
 
@@ -150,9 +152,19 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
    * Save the current calculations in the cloud
    */
   const saveAs = async () => {
+    const headerId = new BSON.ObjectID();
+    const dataId = new BSON.ObjectID();
+
+    const tempDocInfo: DocumentHeader = {
+      ...documentInfo,
+      _id: headerId,
+      documentData_Id: dataId,
+    };
+
     try {
-      await headerMongo.insertOne(documentInfo);
-      await dataMongo.insertOne(values);
+      await refreshToken();
+      await headerMongo.insertOne(tempDocInfo);
+      await dataMongo.insertOne({ ...values, _id: dataId });
     } catch (error) {
       console.error(error);
     }
@@ -169,12 +181,10 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
 
     let headerId = documentInfo._id;
     let documentDataId = documentInfo.documentData_Id;
-    const { _id, ...headerRest } = documentInfo;
 
     if (typeof headerId === "string") {
       headerId = new BSON.ObjectID(headerId);
     }
-
     if (typeof documentDataId === "string") {
       documentDataId = new BSON.ObjectID(documentDataId);
     }
@@ -182,6 +192,8 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
     const existingDocuments = await dataMongo.find({
       _id: documentDataId,
     });
+
+    const { _id, ...headerRest } = documentInfo;
 
     if (existingDocuments.length === 0) {
       try {
