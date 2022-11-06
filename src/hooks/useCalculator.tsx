@@ -155,16 +155,21 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
     const headerId = new BSON.ObjectID();
     const dataId = new BSON.ObjectID();
 
-    const tempDocInfo: DocumentHeader = {
+    const newHeader: DocumentHeader = {
       ...documentInfo,
       _id: headerId,
       documentData_Id: dataId,
     };
 
+    const newData = { ...values, _id: dataId };
+
     try {
       await refreshToken();
-      await headerMongo.insertOne(tempDocInfo);
-      await dataMongo.insertOne({ ...values, _id: dataId });
+      await headerMongo.insertOne(newHeader);
+      await dataMongo.insertOne(newData);
+
+      setValues(newData);
+      setDocumentInfo(newHeader);
     } catch (error) {
       console.error(error);
     }
