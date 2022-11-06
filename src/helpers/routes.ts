@@ -14,7 +14,7 @@ type ProtectedRoutes = {
   [key: string]: RouteObject;
 };
 
-export const login = {
+export const loginRoute = {
   title: "Login | Scientech Ecuador",
   name: "Login",
   target: "/login",

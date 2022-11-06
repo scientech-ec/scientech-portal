@@ -9,7 +9,7 @@ import PrivateWrapper from "./components/templates/PrivateWrapper";
 import ProductsPage from "./components/templates/ProductsPage";
 import PublicWrapper from "./components/templates/PublicWrapper";
 import UnderConstruction from "./components/templates/UnderConstruction";
-import { login, protectedRoutes, publicRoutes } from "./helpers/routes";
+import { loginRoute, protectedRoutes, publicRoutes } from "./helpers/routes";
 import { RealmAppProvider } from "./hooks/useRealmApp";
 
 const AppWithRealm: React.FC = () => {
@@ -37,7 +37,7 @@ const App: React.FC = () => {
             element={<UnderConstruction />}
           />
         </Route>
-        <Route path={login.target} element={<LoginPage />} />
+        <Route path={loginRoute.target} element={<LoginPage />} />
         <Route path={dashboard.target} element={<PrivateWrapper />}>
           <Route index element={<DashboardIndex />} />
           <Route path={calculator.target} element={<CalculatorApp />} />

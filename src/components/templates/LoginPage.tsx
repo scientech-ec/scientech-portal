@@ -22,10 +22,11 @@ export const schema = Yup.object().shape({
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
-  const { logIn, currentUser } = useRealmApp();
+  const { logIn, isLoggedIn, refreshToken, currentUser } = useRealmApp();
 
   useEffect(() => {
-    if (currentUser && currentUser.isLoggedIn) {
+    if (isLoggedIn()) {
+      refreshToken();
       navigate(protectedRoutes.dashboard.target);
     }
   }, [currentUser]);
