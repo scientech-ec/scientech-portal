@@ -1,4 +1,3 @@
-import { BSON } from "realm-web";
 import type {
   ArticleData,
   ArticlesHeader,
@@ -73,7 +72,6 @@ export const addArticle = () => {
 };
 
 export const setInitialValues = () => {
-  const docId = new BSON.ObjectID();
   const calculator: Calculator = {
     lot: {
       originTaxes: 0,
@@ -85,15 +83,12 @@ export const setInitialValues = () => {
       bankExpenses: 0,
     },
     articles: [],
-    _id: docId,
   };
 
   const header: DocumentHeader = {
-    _id: new BSON.ObjectID(),
     name: "",
     description: "",
     articlesQty: 0,
-    documentData_Id: docId,
   };
 
   return { calculator, header };
