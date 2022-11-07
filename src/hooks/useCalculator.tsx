@@ -27,6 +27,7 @@ interface Context {
   update: VoidFunction;
   reset: VoidFunction;
   readIndex: () => Promise<DocumentHeader[]>;
+  open: (header: DocumentHeader) => Promise<void>;
   documentInfo: DocumentHeader;
 }
 
@@ -211,6 +212,18 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
     return await headerMongo.find({});
   };
 
+  const open = async (header: DocumentHeader) => {
+    const { _id, documentData_Id } = header;
+    const headerId = new BSON.ObjectID(_id);
+    const dataId = new BSON.ObjectID(documentData_Id);
+
+    const docHeader = await headerMongo.findOne({ _id: headerId });
+    const docData = await dataMongo.findOne({ _id: dataId });
+
+    setDocumentInfo(docHeader);
+    setValues(docData);
+  };
+
   const contextValue = {
     values,
     handleChange,
@@ -222,6 +235,7 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
     update,
     reset,
     readIndex,
+    open,
     documentInfo,
   };
   return (
