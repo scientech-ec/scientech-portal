@@ -3,11 +3,15 @@ import { useCalculator } from "../../../hooks/useCalculator";
 import CustomButton from "../../atoms/apps/CustomButton";
 import Modal from "../../atoms/Modal";
 import SaveDocument from "./SaveDocument";
+import SelectDocument from "./SelectDocument";
 
 const Controls: React.FC = () => {
   const { compute, reset } = useCalculator();
   const [saveModal, setSaveModal] = useState(false);
   const [retrieveModal, setRetrieveModal] = useState(false);
+
+  const closeSave = () => setSaveModal(false);
+  const closeRetrieve = () => setRetrieveModal(false);
 
   return (
     <React.Fragment>
@@ -24,20 +28,12 @@ const Controls: React.FC = () => {
           </CustomButton>
         </div>
       </header>
-      <Modal
-        open={saveModal}
-        handleClose={() => setSaveModal(false)}
-        title="Guardar?"
-      >
-        <SaveDocument handleClose={() => setSaveModal(false)} />
+      <Modal open={saveModal} handleClose={closeSave} title="Guardar?">
+        <SaveDocument handleClose={closeSave} />
       </Modal>
 
-      <Modal
-        open={retrieveModal}
-        handleClose={() => setRetrieveModal(false)}
-        title="Abrir"
-      >
-        here you can retrieve
+      <Modal open={retrieveModal} handleClose={closeRetrieve} title="Abrir">
+        <SelectDocument handleClose={closeRetrieve} />
       </Modal>
     </React.Fragment>
   );

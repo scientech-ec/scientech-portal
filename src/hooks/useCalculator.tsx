@@ -26,6 +26,7 @@ interface Context {
   saveAs: VoidFunction;
   update: VoidFunction;
   reset: VoidFunction;
+  readIndex: () => Promise<DocumentHeader[]>;
   documentInfo: DocumentHeader;
 }
 
@@ -222,6 +223,10 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
     return;
   };
 
+  const readIndex = async (): Promise<DocumentHeader[]> => {
+    return await headerMongo.find({});
+  };
+
   const contextValue = {
     values,
     handleChange,
@@ -232,6 +237,7 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
     saveAs,
     update,
     reset,
+    readIndex,
     documentInfo,
   };
   return (
