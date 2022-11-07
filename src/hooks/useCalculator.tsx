@@ -28,6 +28,7 @@ interface Context {
   reset: VoidFunction;
   readIndex: () => Promise<DocumentHeader[]>;
   open: (header: DocumentHeader) => Promise<void>;
+  deleteDocument: (header: DocumentHeader) => Promise<void>;
   documentInfo: DocumentHeader;
 }
 
@@ -232,6 +233,19 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
     setValues(docData);
   };
 
+  /**
+   * Deletes the selected document from database
+   * @param header Document header information
+   */
+  const deleteDocument = async (header: DocumentHeader) => {
+    const { _id, documentData_Id } = header;
+    const headerId = new BSON.ObjectID(_id);
+    const dataId = new BSON.ObjectID(documentData_Id);
+
+    await headerMongo.deleteOne({ _id: headerId });
+    await dataMongo.deleteOne({ _id: dataId });
+  };
+
   const contextValue = {
     values,
     handleChange,
@@ -244,6 +258,7 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
     reset,
     readIndex,
     open,
+    deleteDocument,
     documentInfo,
   };
   return (

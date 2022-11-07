@@ -9,7 +9,7 @@ interface Props {
 }
 
 const SelectDocument: React.FC<Props> = ({ handleClose }) => {
-  const { readIndex, open } = useCalculator();
+  const { readIndex, open, deleteDocument } = useCalculator();
 
   const [documents, setDocuments] = useState<DocumentHeader[]>([]);
 
@@ -20,12 +20,18 @@ const SelectDocument: React.FC<Props> = ({ handleClose }) => {
     };
 
     loadData();
-  }, []);
+  }, [documents]);
 
   const handleOpen = async (header: DocumentHeader) => {
     await open(header);
-
     handleClose();
+  };
+
+  const handleDelete = async (header: DocumentHeader) => {
+    await deleteDocument(header);
+    setDocuments((prevState) =>
+      prevState.filter((doc) => doc._id !== header._id)
+    );
   };
 
   return (
@@ -48,7 +54,7 @@ const SelectDocument: React.FC<Props> = ({ handleClose }) => {
               {toLocalDateAndTime(doc.timestamp ?? Date.now())}
             </div>
             <button onClick={() => handleOpen(doc)}>load</button>
-            <button>del</button>
+            <button onClick={() => handleDelete(doc)}>del</button>
           </React.Fragment>
         ))}
       </div>
