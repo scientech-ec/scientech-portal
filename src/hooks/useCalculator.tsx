@@ -208,10 +208,18 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
     }
   };
 
+  /**
+   * Fetch headers from database
+   * @returns Document headers array
+   */
   const readIndex = async (): Promise<DocumentHeader[]> => {
     return await headerMongo.find({});
   };
 
+  /**
+   * Loads the selected document from database
+   * @param header Document header information
+   */
   const open = async (header: DocumentHeader) => {
     const { _id, documentData_Id } = header;
     const headerId = new BSON.ObjectID(_id);
