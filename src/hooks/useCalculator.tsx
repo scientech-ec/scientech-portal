@@ -160,6 +160,7 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
       ...documentInfo,
       _id: headerId,
       documentData_Id: dataId,
+      timestamp: Date.now(),
     };
 
     const newData = { ...values, _id: dataId };
@@ -185,42 +186,25 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
       return;
     }
 
-    let headerId = documentInfo._id;
-    let documentDataId = documentInfo.documentData_Id;
+    const newHeader: DocumentHeader = {
+      ...documentInfo,
+      _id: new BSON.ObjectID(documentInfo._id),
+      documentData_Id: new BSON.ObjectID(documentInfo.documentData_Id),
+      timestamp: Date.now(),
+    };
 
-    if (typeof headerId === "string") {
-      headerId = new BSON.ObjectID(headerId);
+    const newData: Calculator = {
+      ...values,
+      _id: new BSON.ObjectID(values._id),
+    };
+
+    try {
+      await refreshToken();
+      await dataMongo.findOneAndReplace({ _id: newData._id }, values);
+      await headerMongo.findOneAndReplace({ _id: newHeader._id }, newHeader);
+    } catch (error) {
+      console.error(error);
     }
-    if (typeof documentDataId === "string") {
-      documentDataId = new BSON.ObjectID(documentDataId);
-    }
-
-    const existingDocuments = await dataMongo.find({
-      _id: documentDataId,
-    });
-
-    const { _id, ...headerRest } = documentInfo;
-
-    if (existingDocuments.length === 0) {
-      try {
-        await dataMongo.insertOne(values);
-        await headerMongo.updateOne({ _id: headerId }, { $set: headerRest });
-      } catch (error) {
-        console.error(error);
-      }
-    } else {
-      try {
-        await dataMongo.updateOne(
-          { _id: documentDataId },
-          { $set: { articles: values.articles, lot: values.lot } }
-        );
-
-        await headerMongo.updateOne({ _id: headerId }, { $set: headerRest });
-      } catch (error) {
-        console.error(error);
-      }
-    }
-    return;
   };
 
   const readIndex = async (): Promise<DocumentHeader[]> => {
