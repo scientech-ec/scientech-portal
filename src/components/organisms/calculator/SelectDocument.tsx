@@ -27,7 +27,8 @@ const SelectDocument: React.FC<Props> = ({ handleClose }) => {
       <div className="grid grid-cols-12">
         <div>No.</div>
         <div className="col-span-2">Nombre</div>
-        <div className="col-span-5">Descripción</div>
+        <div className="col-span-4">Descripción</div>
+        <div className="col-span-1">Artículos</div>
         <div className="col-span-2">Fecha y Hora</div>
         <div className="col-span-2">Acción</div>
 
@@ -35,7 +36,8 @@ const SelectDocument: React.FC<Props> = ({ handleClose }) => {
           <React.Fragment key={doc._id}>
             <div>{index + 1}</div>
             <div className="col-span-2">{doc.name}</div>
-            <div className="col-span-5">{doc.description}</div>
+            <div className="col-span-4">{doc.description}</div>
+            <div className="col-span-1">{doc.articlesQty}</div>
             <div className="col-span-2">
               {toLocalDateAndTime(doc.timestamp ?? Date.now())}
             </div>
