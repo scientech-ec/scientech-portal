@@ -6,7 +6,7 @@ import * as Realm from "realm-web";
 import * as Yup from "yup";
 import { protectedRoutes } from "../../helpers/routes";
 import { useRealmApp } from "../../hooks/useRealmApp";
-import Scientech from "../atoms/logos/Scientech";
+import Scientech from "../atoms/svg/Scientech";
 
 export const initialValues = {
   email: "",
@@ -22,10 +22,11 @@ export const schema = Yup.object().shape({
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
-  const { logIn, currentUser } = useRealmApp();
+  const { logIn, isLoggedIn, refreshToken, currentUser } = useRealmApp();
 
   useEffect(() => {
-    if (currentUser && currentUser.isLoggedIn) {
+    if (isLoggedIn()) {
+      refreshToken();
       navigate(protectedRoutes.dashboard.target);
     }
   }, [currentUser]);

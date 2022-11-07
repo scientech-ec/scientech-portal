@@ -25,6 +25,7 @@ export type ArticleData = {
 export type Calculator = {
   lot: LotCost;
   articles: ArticleData[];
+  _id?: BSON.ObjectID;
 };
 
 export type ArticlesHeader = {
@@ -43,4 +44,13 @@ export type CalculationValues = {
   CIF: number;
   FODINFA: number;
   tariff: number;
+};
+
+export type DocumentHeader = {
+  name: string;
+  description: string;
+  documentData_Id?: BSON.ObjectID;
+  articlesQty: number;
+  timestamp?: number;
+  _id?: BSON.ObjectID;
 };

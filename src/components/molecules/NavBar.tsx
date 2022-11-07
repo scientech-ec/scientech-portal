@@ -1,7 +1,7 @@
 import React from "react";
 import { RoutesInterface } from "../../interfaces/routesInterface";
-import Scientech from "../atoms/logos/Scientech";
 import NavButton from "../atoms/navbar/NavButton";
+import Scientech from "../atoms/svg/Scientech";
 
 interface Props {
   pages: RoutesInterface;

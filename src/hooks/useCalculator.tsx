@@ -1,9 +1,16 @@
 import produce from "immer";
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { calculatorInitialValues, newArticle } from "../constants/calculator";
+import { BSON } from "realm-web";
+import { addArticle, setInitialValues } from "../constants/calculator";
 import { calculateImportation } from "../functions/importCalculator";
 import { loadFromLocalStorage } from "../helpers/loadFromLocalStorage";
-import type { Calculator } from "../interfaces/calculatorApp";
+import type { Calculator, DocumentHeader } from "../interfaces/calculatorApp";
+import {
+  importCalculatorData,
+  importCalculatorHeader,
+} from "../services/mongoDB/importCalculatorConfig";
+import { useMongo } from "./useMongo";
+import { useRealmApp } from "./useRealmApp";
 
 interface Props {
   children: React.ReactNode;
@@ -11,11 +18,18 @@ interface Props {
 
 interface Context {
   values: Calculator;
-  reset: () => void;
   handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  addRow: () => void;
+  updateDocumentHeader: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  addRow: VoidFunction;
   deleteRow: (index: number) => void;
-  compute: () => void;
+  compute: VoidFunction;
+  saveAs: VoidFunction;
+  update: VoidFunction;
+  reset: VoidFunction;
+  readIndex: () => Promise<DocumentHeader[]>;
+  open: (header: DocumentHeader) => Promise<void>;
+  deleteDocument: (header: DocumentHeader) => Promise<void>;
+  documentInfo: DocumentHeader;
 }
 
 const CalculatorContext = createContext<Context>({} as Context);
@@ -25,22 +39,27 @@ const CalculatorContext = createContext<Context>({} as Context);
 // todo: min value 1 for qty
 
 export const CalculatorProvider: React.FC<Props> = ({ children }) => {
+  const { refreshToken } = useRealmApp();
+  const dataMongo = useMongo(importCalculatorData);
+  const headerMongo = useMongo(importCalculatorHeader);
+
+  const { calculator, header } = setInitialValues();
   const [values, setValues] = useState<Calculator>(
-    loadFromLocalStorage("calculator", calculatorInitialValues)
+    loadFromLocalStorage("calculator", calculator)
+  );
+  const [documentInfo, setDocumentInfo] = useState<DocumentHeader>(
+    loadFromLocalStorage("header", header)
   );
 
-  /** Stores in local storage to prevent data lost */
+  /** Stores in  local storage to prevent calculator data lost */
   useEffect(() => {
     localStorage.setItem("calculator", JSON.stringify(values));
   }, [values]);
 
-  /**
-   * Reset calculator
-   */
-  const reset = () => {
-    localStorage.setItem("calculator", JSON.stringify(calculatorInitialValues));
-    setValues(calculatorInitialValues);
-  };
+  /** Stores in  local storage to prevent calculator data lost */
+  useEffect(() => {
+    localStorage.setItem("header", JSON.stringify(documentInfo));
+  }, [documentInfo]);
 
   /**
    * Stores the data in the calculator object
@@ -64,6 +83,34 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
   };
 
   /**
+   * Updates document information for referrence
+   * @param event Input event handler
+   */
+  const updateDocumentHeader = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value, name } = event.target;
+
+    setDocumentInfo({ ...documentInfo, [name]: value });
+  };
+
+  /**
+   * Add a new row to the current calculation
+   */
+  const addRow = () => {
+    setValues((prevState) => ({
+      ...prevState,
+      articles: [...prevState.articles, addArticle()],
+    }));
+
+    // todo: Increase article counter on header document
+
+    setDocumentInfo(
+      produce((draft) => {
+        draft.articlesQty += 1;
+      })
+    );
+  };
+
+  /**
    * Method used to delete an entire article information
    * @param index index number of the article to delete
    */
@@ -72,18 +119,18 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
     articles.splice(index, 1);
 
     setValues({ ...values, articles });
+
+    // todo: Decrease article counter on header document
+    setDocumentInfo(
+      produce((draft) => {
+        draft.articlesQty -= 1;
+      })
+    );
   };
 
   /**
-   * Add a new article row
+   * Compute articles prices based on given inputs
    */
-  const addRow = () => {
-    setValues((prevState) => ({
-      ...prevState,
-      articles: [...prevState.articles, newArticle()],
-    }));
-  };
-
   const compute = () => {
     if (values.articles.length === 0 || Object.keys(values.lot).length === 0)
       return;
@@ -95,13 +142,124 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
     }
   };
 
+  /**
+   * Reset current document values
+   */
+  const reset = () => {
+    const { calculator, header } = setInitialValues();
+    setValues(calculator);
+    setDocumentInfo(header);
+  };
+
+  /**
+   * Save the current calculations in the cloud
+   */
+  const saveAs = async () => {
+    const headerId = new BSON.ObjectID();
+    const dataId = new BSON.ObjectID();
+
+    const newHeader: DocumentHeader = {
+      ...documentInfo,
+      _id: headerId,
+      documentData_Id: dataId,
+      timestamp: Date.now(),
+    };
+
+    const newData = { ...values, _id: dataId };
+
+    try {
+      await refreshToken();
+      await headerMongo.insertOne(newHeader);
+      await dataMongo.insertOne(newData);
+
+      setValues(newData);
+      setDocumentInfo(newHeader);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  /**
+   * Update the existant document in the cloud
+   */
+  const update = async () => {
+    if (!("documentData_Id" in documentInfo)) {
+      saveAs();
+      return;
+    }
+
+    const newHeader: DocumentHeader = {
+      ...documentInfo,
+      _id: new BSON.ObjectID(documentInfo._id),
+      documentData_Id: new BSON.ObjectID(documentInfo.documentData_Id),
+      timestamp: Date.now(),
+    };
+
+    const newData: Calculator = {
+      ...values,
+      _id: new BSON.ObjectID(values._id),
+    };
+
+    try {
+      await refreshToken();
+      await dataMongo.findOneAndReplace({ _id: newData._id }, values);
+      await headerMongo.findOneAndReplace({ _id: newHeader._id }, newHeader);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  /**
+   * Fetch headers from database
+   * @returns Document headers array
+   */
+  const readIndex = async (): Promise<DocumentHeader[]> => {
+    return await headerMongo.find({});
+  };
+
+  /**
+   * Loads the selected document from database
+   * @param header Document header information
+   */
+  const open = async (header: DocumentHeader) => {
+    const { _id, documentData_Id } = header;
+    const headerId = new BSON.ObjectID(_id);
+    const dataId = new BSON.ObjectID(documentData_Id);
+
+    const docHeader = await headerMongo.findOne({ _id: headerId });
+    const docData = await dataMongo.findOne({ _id: dataId });
+
+    setDocumentInfo(docHeader);
+    setValues(docData);
+  };
+
+  /**
+   * Deletes the selected document from database
+   * @param header Document header information
+   */
+  const deleteDocument = async (header: DocumentHeader) => {
+    const { _id, documentData_Id } = header;
+    const headerId = new BSON.ObjectID(_id);
+    const dataId = new BSON.ObjectID(documentData_Id);
+
+    await headerMongo.deleteOne({ _id: headerId });
+    await dataMongo.deleteOne({ _id: dataId });
+  };
+
   const contextValue = {
     values,
-    reset,
     handleChange,
+    updateDocumentHeader,
     addRow,
     deleteRow,
     compute,
+    saveAs,
+    update,
+    reset,
+    readIndex,
+    open,
+    deleteDocument,
+    documentInfo,
   };
   return (
     <CalculatorContext.Provider value={contextValue}>

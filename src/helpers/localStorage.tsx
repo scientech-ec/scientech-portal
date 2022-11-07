@@ -1,6 +1,6 @@
 export const loadFromLocalStorage = (
   item: string,
-  fallback: any
+  fallback = null
 ): typeof fallback => {
   const storedData = localStorage.getItem(item);
   if (
@@ -12,4 +12,10 @@ export const loadFromLocalStorage = (
   }
 
   return fallback;
+};
+
+export const getExpTime = () => {
+  const storedValue = JSON.parse(localStorage.getItem("expTime") ?? "null");
+
+  return typeof storedValue === "number" ? storedValue : null;
 };

@@ -2,6 +2,7 @@ import type {
   ArticleData,
   ArticlesHeader,
   Calculator,
+  DocumentHeader,
 } from "../interfaces/calculatorApp";
 
 export const articlesHeader: ArticlesHeader[] = [
@@ -36,27 +37,6 @@ export const articlesHeader: ArticlesHeader[] = [
   },
 ];
 
-export const newArticle = () => {
-  const newArticle: Record<string, string | number> = {};
-  articlesHeader.forEach((column) => {
-    newArticle[column.name] = column.initialValue;
-  });
-  return newArticle as ArticleData;
-};
-
-export const calculatorInitialValues: Calculator = {
-  lot: {
-    originTaxes: 0,
-    originFleet: 0,
-    importFleetPerLibre: 0,
-    importProcedure: 0,
-    customsAgent: 0,
-    localFleet: 0,
-    bankExpenses: 0,
-  },
-  articles: [newArticle()],
-};
-
 export const lotSchema = [
   {
     title: "Costos en Origen",
@@ -82,3 +62,34 @@ export const lotSchema = [
   },
 ];
 export type LotSchema = typeof lotSchema;
+
+export const addArticle = () => {
+  const newArticle: Record<string, string | number> = {};
+  articlesHeader.forEach((column) => {
+    newArticle[column.name] = column.initialValue;
+  });
+  return newArticle as ArticleData;
+};
+
+export const setInitialValues = () => {
+  const calculator: Calculator = {
+    lot: {
+      originTaxes: 0,
+      originFleet: 0,
+      importFleetPerLibre: 0,
+      importProcedure: 0,
+      customsAgent: 0,
+      localFleet: 0,
+      bankExpenses: 0,
+    },
+    articles: [],
+  };
+
+  const header: DocumentHeader = {
+    name: "",
+    description: "",
+    articlesQty: 0,
+  };
+
+  return { calculator, header };
+};
