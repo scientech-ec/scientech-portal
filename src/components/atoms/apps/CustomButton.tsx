@@ -26,10 +26,12 @@ const CustomButton: React.FC<Props> = ({
   return (
     <button
       {...rest}
-      className={`rounded-md border py-1 px-2  ${handleVariant()}`}
+      className={`flex items-center gap-1 rounded-md border py-1 px-2 ${handleVariant()} ${
+        rest.className
+      }`}
     >
       {icon !== undefined && iconPosition === "start" && icon}
-      {children}
+      <span>{children}</span>
       {icon !== undefined && iconPosition === "end" && icon}
     </button>
   );
