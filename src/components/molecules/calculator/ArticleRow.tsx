@@ -18,7 +18,9 @@ const ArticleRow: React.FC<Props> = ({ article, index }) => {
     <>
       {articlesHeader.map((column) => (
         <CustomInput
-          className={`${column.name === "name" ? "col-span-6" : "col-span-2"}`}
+          className={`m-[1px] ${
+            column.name === "name" ? "col-span-6" : "col-span-2"
+          }`}
           type={column.type}
           key={column.name}
           value={article[column.name]}
