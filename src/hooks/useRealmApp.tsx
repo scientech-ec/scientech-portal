@@ -53,7 +53,7 @@ export const RealmAppProvider: React.FC<Props> = ({ appId, children }) => {
 
   const refreshToken = async () => {
     if (currentUser && currentUser?.accessToken) {
-      const { exp } = jwtDecode(currentUser.accessToken);
+      const { exp } = jwtDecode(currentUser.accessToken) as { exp: number };
       const isExpired = Date.now() >= exp * 1000;
 
       if (isExpired) {
@@ -64,10 +64,9 @@ export const RealmAppProvider: React.FC<Props> = ({ appId, children }) => {
 
   const isLoggedIn = (): boolean => {
     if (currentUser && currentUser.isLoggedIn && currentUser.accessToken) {
-      const { exp } = jwtDecode(currentUser.accessToken);
       const expTime = getExpTime();
 
-      if (expTime && Date.now() <= expTime * 1000) {
+      if (expTime && Date.now() <= expTime) {
         return true;
       }
     }
