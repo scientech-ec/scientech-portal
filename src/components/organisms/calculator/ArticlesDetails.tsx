@@ -1,6 +1,8 @@
+import { PlusCircleIcon } from "@heroicons/react/outline";
 import React from "react";
 import { articlesHeader } from "../../../constants/calculator";
 import { useCalculator } from "../../../hooks/useCalculator";
+import CustomButton from "../../atoms/apps/CustomButton";
 import ArticleRow from "../../molecules/calculator/ArticleRow";
 
 const ArticlesDetails: React.FC = () => {
@@ -12,7 +14,7 @@ const ArticlesDetails: React.FC = () => {
       <div className="grid grid-cols-24">
         {articlesHeader.map((column) => (
           <p
-            className={`${
+            className={`m-[1px] flex items-center justify-center rounded-md border bg-sky-500 px-2 py-1 text-center font-bold ${
               column.name === "name" ? "col-span-6" : "col-span-2"
             }`}
             key={column.name}
@@ -20,9 +22,14 @@ const ArticlesDetails: React.FC = () => {
             {column.title}
           </p>
         ))}
-        <button className="col-span-2" onClick={addRow}>
-          Add row
-        </button>
+        <CustomButton
+          className="col-span-2"
+          variant="success"
+          onClick={addRow}
+          icon={<PlusCircleIcon className="h-8 w-8" />}
+        >
+          Agregar ítem
+        </CustomButton>
 
         {values.articles.map((article, idx) => (
           <ArticleRow article={article} index={idx} key={idx} />

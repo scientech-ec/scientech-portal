@@ -1,7 +1,9 @@
+import { TrashIcon } from "@heroicons/react/outline";
 import React from "react";
 import { articlesHeader } from "../../../constants/calculator";
 import { useCalculator } from "../../../hooks/useCalculator";
 import type { ArticleData } from "../../../interfaces/calculatorApp";
+import CustomButton from "../../atoms/apps/CustomButton";
 import CustomInput from "../../atoms/apps/CustomInput";
 
 interface Props {
@@ -23,9 +25,14 @@ const ArticleRow: React.FC<Props> = ({ article, index }) => {
           name={`articles.${index}.${column.name}`}
         />
       ))}
-      <button className="col-span-2" onClick={() => deleteRow(index)}>
-        borrar
-      </button>
+      <CustomButton
+        className="col-span-2 justify-center"
+        onClick={() => deleteRow(index)}
+        variant="danger"
+        icon={<TrashIcon className="h-5 w-5" />}
+      >
+        Borrar
+      </CustomButton>
     </>
   );
 };
