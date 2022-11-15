@@ -1,11 +1,17 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { protectedRoutes } from "../../helpers/routes";
+import { Link, useNavigate } from "react-router-dom";
+import { loginRoute, protectedRoutes } from "../../helpers/routes";
 import { useRealmApp } from "../../hooks/useRealmApp";
 import Scientech from "../atoms/svg/Scientech";
 
 const DashboardHeader: React.FC = () => {
   const { logOut } = useRealmApp();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await logOut();
+    navigate(loginRoute.target);
+  };
   return (
     <header className="sticky flex items-center justify-between bg-scientech p-2">
       <Scientech variant="white" className="h-10" />
@@ -17,7 +23,10 @@ const DashboardHeader: React.FC = () => {
         >
           Casita
         </Link>
-        <button className="rounded-md bg-black/20 py-2 px-4" onClick={logOut}>
+        <button
+          className="rounded-md bg-black/20 py-2 px-4"
+          onClick={handleLogout}
+        >
           Salir
         </button>
       </div>
