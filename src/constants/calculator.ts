@@ -82,23 +82,31 @@ export const lotSchema = [
   {
     title: "Costos en Origen",
     values: [
-      { name: "Impuestos en origen:", value: "originTaxes" },
-      { name: "Flete en origen:", value: "originFleet" },
+      { name: "Impuestos en origen:", value: "originTaxes", endSymbol: "%" },
+      { name: "Flete en origen:", value: "originFleet", startSymbol: "$" },
     ],
   },
   {
     title: "Costos de Importación",
     values: [
-      { name: "Costo de flete [USD/lb]:", value: "importFleetPerLibre" },
-      { name: "Trámite de importación:", value: "importProcedure" },
-      { name: "Agente aduanero:", value: "customsAgent" },
+      {
+        name: "Costo de flete [USD/lb]:",
+        value: "importFleetPerLibre",
+        startSymbol: "$",
+      },
+      {
+        name: "Trámite de importación:",
+        value: "importProcedure",
+        startSymbol: "$",
+      },
+      { name: "Agente aduanero:", value: "customsAgent", startSymbol: "$" },
     ],
   },
   {
     title: "Costos Locales",
     values: [
-      { name: "Flete y movilización:", value: "localFleet" },
-      { name: "Tarifas bancarias:", value: "bankExpenses" },
+      { name: "Flete y movilización:", value: "localFleet", startSymbol: "$" },
+      { name: "Tarifas bancarias:", value: "bankExpenses", startSymbol: "$" },
     ],
   },
 ];
