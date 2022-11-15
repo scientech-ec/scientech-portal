@@ -17,7 +17,7 @@ const LotCard: React.FC<Props> = ({ title, values }) => {
   return (
     <div className="w-80">
       <h6>{title}</h6>
-      <div className="grid grid-cols-4 gap-2">
+      <div className="grid grid-cols-4 gap-y-1">
         {values.map((value, index) => (
           <React.Fragment key={index}>
             <CustomLabel className="col-span-3" caption={value.label} />

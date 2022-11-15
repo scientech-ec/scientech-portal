@@ -20,7 +20,7 @@ const ArticleRow: React.FC<Props> = ({ article, index }) => {
         column.field === "input" ? (
           <div
             key={column.name}
-            className={`m-px flex items-center justify-between gap-1 rounded-md  border px-2 py-1 ${
+            className={`flex items-center justify-between gap-1 rounded-md  border px-2 ${
               column.name === "name" ? "col-span-6" : "col-span-2"
             }`}
           >
@@ -36,7 +36,7 @@ const ArticleRow: React.FC<Props> = ({ article, index }) => {
         ) : (
           <div
             key={column.name}
-            className="col-span-2 m-px flex items-center justify-between gap-1 rounded-md border bg-gray-100 px-2 py-1"
+            className="col-span-2 flex items-center justify-between gap-1 rounded-md border bg-gray-100 px-2"
           >
             <span className="text-xs text-gray-600">{column.startSymbol}</span>
             <span className="grow">{article[column.name]}</span>

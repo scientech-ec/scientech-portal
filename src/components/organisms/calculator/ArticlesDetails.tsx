@@ -11,10 +11,10 @@ const ArticlesDetails: React.FC = () => {
     <section className="w-full rounded-md border p-2">
       <h5>Detalle de Artículos</h5>
 
-      <div className="grid grid-cols-24">
+      <div className="grid grid-cols-24 gap-1">
         {articlesHeader.map((column) => (
           <p
-            className={`m-[1px] flex items-center justify-center rounded-md border bg-sky-500 px-2 py-1 text-center font-bold ${
+            className={`flex items-center justify-center rounded-md border border-sky-500 bg-sky-500 px-2 py-1 text-center font-bold ${
               column.name === "name" ? "col-span-6" : "col-span-2"
             }`}
             key={column.name}
