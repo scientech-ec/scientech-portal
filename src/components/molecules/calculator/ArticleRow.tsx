@@ -16,17 +16,34 @@ const ArticleRow: React.FC<Props> = ({ article, index }) => {
 
   return (
     <>
-      {articlesHeader.map((column) => (
-        <CustomInput
-          className={`m-[1px] ${
-            column.name === "name" ? "col-span-6" : "col-span-2"
-          }`}
-          type={column.type}
-          key={column.name}
-          value={article[column.name]}
-          name={`articles.${index}.${column.name}`}
-        />
-      ))}
+      {articlesHeader.map((column) =>
+        column.field === "input" ? (
+          <div
+            key={column.name}
+            className={`m-px flex items-center justify-between gap-1 rounded-md  border px-2 py-1 ${
+              column.name === "name" ? "col-span-6" : "col-span-2"
+            }`}
+          >
+            <span className="text-xs text-gray-600">{column.startSymbol}</span>
+            <CustomInput
+              className="h-full w-full rounded-none border-none focus:outline-none"
+              type={column.type}
+              value={article[column.name]}
+              name={`articles.${index}.${column.name}`}
+            />
+            <span className="text-xs text-gray-600">{column.endSymbol}</span>
+          </div>
+        ) : (
+          <div
+            key={column.name}
+            className="col-span-2 m-px flex items-center justify-between gap-1 rounded-md border px-2 py-1"
+          >
+            <span className="text-xs text-gray-600">{column.startSymbol}</span>
+            <span className="grow">{article[column.name]}</span>
+            <span className="text-xs text-gray-600">{column.endSymbol}</span>
+          </div>
+        )
+      )}
       <CustomButton
         className="col-span-2 justify-center"
         onClick={() => deleteRow(index)}

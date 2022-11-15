@@ -33,6 +33,9 @@ export type ArticlesHeader = {
   type: string;
   title: string;
   initialValue: number | string;
+  field: "input" | "span";
+  startSymbol?: string;
+  endSymbol?: string;
 };
 
 export type CalculationValues = {
