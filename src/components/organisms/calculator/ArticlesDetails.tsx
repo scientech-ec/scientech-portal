@@ -8,10 +8,10 @@ import ArticleRow from "../../molecules/calculator/ArticleRow";
 const ArticlesDetails: React.FC = () => {
   const { values, addRow } = useCalculator();
   return (
-    <section className="w-full rounded-md border p-2">
+    <section className="w-full rounded-md border p-4">
       <h5>Detalle de Artículos</h5>
 
-      <div className="grid grid-cols-24 gap-1">
+      <div className="mt-2 grid grid-cols-24 gap-1">
         {articlesHeader.map((column) => (
           <p
             className={`flex items-center justify-center rounded-md border border-sky-500 bg-sky-500 px-2 py-1 text-center font-bold ${

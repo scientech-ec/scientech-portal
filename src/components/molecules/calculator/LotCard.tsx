@@ -16,11 +16,13 @@ interface Props {
 const LotCard: React.FC<Props> = ({ title, values }) => {
   return (
     <div className="w-80">
-      <h6>{title}</h6>
-      <div className="grid grid-cols-4 gap-y-1">
+      <h6 className="rounded-md bg-sky-500 py-1 text-center font-bold">
+        {title}
+      </h6>
+      <div className="mt-1 grid grid-cols-3 gap-y-1 rounded-md border p-1">
         {values.map((value, index) => (
           <React.Fragment key={index}>
-            <CustomLabel className="col-span-3" caption={value.label} />
+            <CustomLabel className="col-span-2" caption={value.label} />
             <div className="flex items-center gap-1 rounded-md border px-1">
               <span className="text-xs text-gray-600">{value.startSymbol}</span>
               <CustomInput

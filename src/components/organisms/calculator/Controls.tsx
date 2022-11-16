@@ -21,7 +21,7 @@ const Controls: React.FC = () => {
 
   return (
     <React.Fragment>
-      <header className="flex w-full items-center justify-between rounded-md border p-2 shadow-sm">
+      <header className="flex w-full items-center justify-between rounded-md border p-4 shadow-sm">
         <h4 className="">Calculadora de Importaciones</h4>
         <div className="flex gap-2">
           <CustomButton
