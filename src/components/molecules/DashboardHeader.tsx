@@ -5,10 +5,11 @@ import { useRealmApp } from "../../hooks/useRealmApp";
 import Scientech from "../atoms/svg/Scientech";
 
 const DashboardHeader: React.FC = () => {
-  const { logOut } = useRealmApp();
+  const { logOut, refreshToken } = useRealmApp();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
+    await refreshToken();
     await logOut();
     navigate(loginRoute.target);
   };
