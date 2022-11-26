@@ -39,7 +39,7 @@ export type ArticlesHeader = {
 };
 
 export type CalculationValues = {
-  itemWeight: number;
+  rowWeight: number;
   EXW: number;
   weightFraction: number;
   FOB: number;
