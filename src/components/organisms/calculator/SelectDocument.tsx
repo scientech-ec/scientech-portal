@@ -1,9 +1,24 @@
 import { CheckIcon, TrashIcon, XIcon } from "@heroicons/react/outline";
 import React, { useEffect, useState } from "react";
+import { BSON } from "realm-web";
 import { toLocalDateAndTime } from "../../../helpers/date";
 import { useCalculator } from "../../../hooks/useCalculator";
 import { DocumentHeader } from "../../../interfaces/calculatorApp";
 import CustomButton from "../../atoms/apps/CustomButton";
+
+/* 
+todo: For pagination:
+
+It's necessary to create a wrapper that receives all the fetched data, it would execute the following steps to render the paginated content.
+
+- It has to wrap this table component to render only the values that has to change
+- Receives the array of data
+- Counts the number of elements in the array
+- Calculates how many pages need to organize all the data
+- Render the data on each page according to the selected index
+- Accomodate the pages buttons for quick access, it includes a next button and a last page button
+- Renders conditionally an start button and a previous button, depending to the page index and the available pages
+*/
 
 interface Props {
   handleClose: VoidFunction;
@@ -11,17 +26,36 @@ interface Props {
 
 const SelectDocument: React.FC<Props> = ({ handleClose }) => {
   const { readIndex, open, deleteDocument } = useCalculator();
-
   const [documents, setDocuments] = useState<DocumentHeader[]>([]);
+  const whitespaceLimit = 40;
 
+  // todo: add pagination function and loading placeholder
   useEffect(() => {
     const loadData = async () => {
       const docs = await readIndex();
+
+      for (let index = 0; index < 20; index++) {
+        const element: DocumentHeader = {
+          name: `mock-name-${index}`,
+          description: `art-${index} Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem vel esse minima odio natus magnam totam quam, consectetur laudantium. Vitae?`,
+          articlesQty: index,
+          _id: `article-${index}-mock-data`,
+        };
+
+        docs.push(element);
+      }
+
+      const example = new BSON.ObjectID(docs[0]._id);
+      const example1 = new BSON.ObjectID(docs[1]._id);
+
+      console.log(example.getTimestamp(), example.toHexString());
+      console.log(example1.toHexString() > example.toHexString());
+
       setDocuments(docs);
     };
 
     loadData();
-  }, [documents]);
+  }, []);
 
   const handleOpen = async (header: DocumentHeader) => {
     await open(header);
@@ -57,21 +91,23 @@ const SelectDocument: React.FC<Props> = ({ handleClose }) => {
 
         {documents.map((doc, index) => (
           <React.Fragment key={doc._id}>
-            <div className="flex items-center justify-center whitespace-nowrap rounded-md border px-1">
+            <p className="flex items-center justify-center whitespace-nowrap rounded-md border px-1">
               {index + 1}
-            </div>
-            <div className="col-span-2 flex items-center whitespace-nowrap rounded-md border px-1">
+            </p>
+            <p className="col-span-2 flex items-center whitespace-nowrap rounded-md border px-1">
               {doc.name}
-            </div>
-            <div className="col-span-4 flex items-center whitespace-nowrap rounded-md border px-1">
-              {doc.description}
-            </div>
-            <div className="col-span-1 flex items-center whitespace-nowrap rounded-md border px-1">
+            </p>
+            <p className="col-span-4 flex items-center whitespace-pre rounded-md border px-1">
+              {doc.description.length > whitespaceLimit
+                ? doc.description.slice(0, whitespaceLimit) + "..."
+                : doc.description}
+            </p>
+            <p className="col-span-1 flex items-center whitespace-nowrap rounded-md border px-1">
               {doc.articlesQty}
-            </div>
-            <div className="col-span-2 flex items-center whitespace-nowrap rounded-md border px-1">
+            </p>
+            <p className="col-span-2 flex items-center whitespace-nowrap rounded-md border px-1">
               {toLocalDateAndTime(doc.timestamp ?? Date.now())}
-            </div>
+            </p>
             <CustomButton
               onClick={() => handleOpen(doc)}
               variant="success"
