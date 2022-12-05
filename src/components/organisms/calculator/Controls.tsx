@@ -58,7 +58,12 @@ const Controls: React.FC = () => {
         <SaveDocument handleClose={closeSave} />
       </Modal>
 
-      <Modal open={retrieveModal} handleClose={closeRetrieve} title="Abrir">
+      <Modal
+        open={retrieveModal}
+        handleClose={closeRetrieve}
+        title="Abrir"
+        modalClasses="w-[80%]"
+      >
         <SelectDocument handleClose={closeRetrieve} />
       </Modal>
     </React.Fragment>

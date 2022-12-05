@@ -26,7 +26,7 @@ const CustomButton: React.FC<Props> = ({
   return (
     <button
       {...rest}
-      className={`flex items-center gap-1 rounded-md border py-1 px-2 ${handleVariant()} ${
+      className={`flex items-center justify-center gap-1 rounded-md border py-1 px-2 ${handleVariant()} ${
         rest.className
       }`}
     >
