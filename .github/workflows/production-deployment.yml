@@ -17,6 +17,12 @@ jobs:
           node-version: 18
 
       - name: 🔨 Build Project
+        env:
+          VITE_REALM_APP: ${{ secrets.VITE_REALM_APP }}
+          VITE_CLUSTER_NAME: ${{ secrets.VITE_CLUSTER_NAME }}
+          VITE_DB_IMPORT_CALCULATOR: ${{ secrets.VITE_DB_IMPORT_CALCULATOR }}
+          VITE_IMPORT_CALCULATOR_DATA: ${{ secrets.VITE_IMPORT_CALCULATOR_DATA }}
+          VITE_IMPORT_CALCULATOR_HEADER: ${{ secrets.VITE_IMPORT_CALCULATOR_HEADER }}
         run: |
           npm install
           npm run build
