@@ -25,20 +25,20 @@ const PageSelector: React.FC<Props> = ({
 }) => {
   return (
     <div className="flex items-center">
-      <button className="rounded-md border px-2 py-1">
-        <ChevronDoubleLeftIcon className="h-5 w-5" onClick={onFirst} />
+      <button onClick={onFirst} className="rounded-md border px-2 py-1">
+        <ChevronDoubleLeftIcon className="h-5 w-5" />
       </button>
-      <button className="rounded-md border px-2 py-1">
-        <ChevronLeftIcon className="h-5 w-5" onClick={onPrevious} />
+      <button onClick={onPrevious} className="rounded-md border px-2 py-1">
+        <ChevronLeftIcon className="h-5 w-5" />
       </button>
       <span className="px-4">
         Página {currentPage} de {totalPages}
       </span>
-      <button className="rounded-md border px-2 py-1">
-        <ChevronRightIcon className="h-5 w-5" onClick={onNext} />
+      <button onClick={onNext} className="rounded-md border px-2 py-1">
+        <ChevronRightIcon className="h-5 w-5" />
       </button>
-      <button className="rounded-md border px-2 py-1">
-        <ChevronDoubleRightIcon className="h-5 w-5" onClick={onLast} />
+      <button onClick={onLast} className="rounded-md border px-2 py-1">
+        <ChevronDoubleRightIcon className="h-5 w-5" />
       </button>
     </div>
   );
