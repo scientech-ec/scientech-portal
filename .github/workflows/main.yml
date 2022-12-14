@@ -2,6 +2,37 @@ on:
   push:
     branches:
       - dev
+name: 🚀 Test deploy website on push
+jobs:
+  web-deploy:
+    name: 🎉 Test deployment
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🚚 Get latest code
+        uses: actions/checkout@v3
+
+      - name: Use Node.js 18
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: 🔨 Build Project
+        run: |
+          npm install
+          npm run build
+      - name: 📂 Sync files
+        uses: SamKirkland/FTP-Deploy-Action@4.3.3
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./dist/
+          dry-run: true
+
+on:
+  push:
+    branches:
+      - main
 name: 🚀 Deploy website on push
 jobs:
   web-deploy:
@@ -27,4 +58,3 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./dist/
-          dry-run: true
