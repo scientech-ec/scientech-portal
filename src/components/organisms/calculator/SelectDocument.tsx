@@ -30,7 +30,7 @@ const SelectDocument: React.FC<Props> = ({ handleClose }) => {
   const [documents, setDocuments] = useState<DocumentHeader[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const maxItemsPerPage = 5;
+  const maxItemsPerPage = 10;
 
   // todo: add pagination function and loading placeholder
   useEffect(() => {
@@ -84,19 +84,16 @@ const SelectDocument: React.FC<Props> = ({ handleClose }) => {
   };
 
   const paginatedDocuments = (): DocumentHeader[] => {
-    /* 
-    0..4          (5*1 - 5, 5*1)
-    5..9          (5*2 - 5, 5*2)
-    10..14
-    15..19
-    */
     const lastDocumentIndex = maxItemsPerPage * currentPage;
-    return documents.slice(lastDocumentIndex - 5, lastDocumentIndex);
+    return documents.slice(
+      lastDocumentIndex - maxItemsPerPage,
+      lastDocumentIndex
+    );
   };
 
   return (
     <>
-      <div>
+      <div className="flex flex-col gap-4 border-b px-4 py-6">
         <PageSelector
           currentPage={currentPage}
           totalPages={totalPages}
@@ -105,33 +102,32 @@ const SelectDocument: React.FC<Props> = ({ handleClose }) => {
           onNext={() => handlePagination(+1)}
           onPrevious={() => handlePagination(-1)}
         />
-      </div>
-      <div className="grid grid-cols-12 gap-1 border-b px-4 py-6">
-        <div className="col-span-2 rounded-md border bg-sky-500 text-center">
-          Nombre
+        <div className="grid grid-cols-12 gap-1">
+          <div className="col-span-2 rounded-md border bg-sky-500 text-center">
+            Nombre
+          </div>
+          <div className="col-span-5 rounded-md border bg-sky-500 text-center">
+            Descripción
+          </div>
+          <div className="col-span-1 rounded-md border bg-sky-500 text-center">
+            Artículos
+          </div>
+          <div className="col-span-2 rounded-md border bg-sky-500 text-center">
+            Fecha y Hora
+          </div>
+          <div className="col-span-2 rounded-md border bg-sky-500 text-center">
+            Acción
+          </div>
+          {paginatedDocuments().map((doc, index) => (
+            <SelectDocumentRow
+              document={doc}
+              index={index}
+              handleDelete={handleDelete}
+              handleOpen={handleOpen}
+              key={index}
+            />
+          ))}
         </div>
-        <div className="col-span-5 rounded-md border bg-sky-500 text-center">
-          Descripción
-        </div>
-        <div className="col-span-1 rounded-md border bg-sky-500 text-center">
-          Artículos
-        </div>
-        <div className="col-span-2 rounded-md border bg-sky-500 text-center">
-          Fecha y Hora
-        </div>
-        <div className="col-span-2 rounded-md border bg-sky-500 text-center">
-          Acción
-        </div>
-
-        {paginatedDocuments().map((doc, index) => (
-          <SelectDocumentRow
-            document={doc}
-            index={index}
-            handleDelete={handleDelete}
-            handleOpen={handleOpen}
-            key={index}
-          />
-        ))}
       </div>
       <div className="flex justify-end gap-2 px-4 py-3">
         <CustomButton

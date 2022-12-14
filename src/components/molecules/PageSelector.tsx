@@ -24,21 +24,21 @@ const PageSelector: React.FC<Props> = ({
   totalPages,
 }) => {
   return (
-    <div>
-      <button>
-        <ChevronDoubleLeftIcon className="h-4 w-4" onClick={onFirst} />
+    <div className="flex items-center">
+      <button className="rounded-md border px-2 py-1">
+        <ChevronDoubleLeftIcon className="h-5 w-5" onClick={onFirst} />
       </button>
-      <button>
-        <ChevronLeftIcon className="h-4 w-4" onClick={onPrevious} />
+      <button className="rounded-md border px-2 py-1">
+        <ChevronLeftIcon className="h-5 w-5" onClick={onPrevious} />
       </button>
-      <span>
+      <span className="px-4">
         Página {currentPage} de {totalPages}
       </span>
-      <button>
-        <ChevronRightIcon className="h-4 w-4" onClick={onNext} />
+      <button className="rounded-md border px-2 py-1">
+        <ChevronRightIcon className="h-5 w-5" onClick={onNext} />
       </button>
-      <button>
-        <ChevronDoubleRightIcon className="h-4 w-4" onClick={onLast} />
+      <button className="rounded-md border px-2 py-1">
+        <ChevronDoubleRightIcon className="h-5 w-5" onClick={onLast} />
       </button>
     </div>
   );
