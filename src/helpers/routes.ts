@@ -1,31 +1,53 @@
-import { RoutesInterface } from '../interfaces/routesInterface';
+import { RouteObject } from "../interfaces/routesInterface";
 
-const routes: RoutesInterface = {
-  client: {
-    home: { title: 'Inicio | Scientech Ecuador', name: 'Inicio', target: '/' },
-    products: {
-      title: 'Catálogo | Scientech Ecuador',
-      name: 'Productos',
-      target: '/productos',
-    },
-    contact: {
-      title: 'Contacto | Scientech Ecuador',
-      name: 'Contacto',
-      target: '/contacto',
-    },
-    'under-construction': {
-      title: 'Esperanos | Scientech Ecuador',
-      name: 'Contacto',
-      target: '/under-construction',
-    },
+type PublicRoutes = {
+  home: RouteObject;
+  products: RouteObject;
+  contact: RouteObject;
+  underConstruction: RouteObject;
+  [key: string]: RouteObject;
+};
+
+type ProtectedRoutes = {
+  dashboard: RouteObject;
+  calculator: RouteObject;
+  [key: string]: RouteObject;
+};
+
+export const loginRoute = {
+  title: "Login | Scientech Ecuador",
+  name: "Login",
+  target: "/login",
+};
+
+export const publicRoutes: PublicRoutes = {
+  home: { title: "Inicio | Scientech Ecuador", name: "Inicio", target: "/" },
+  products: {
+    title: "Catálogo | Scientech Ecuador",
+    name: "Productos",
+    target: "/productos",
   },
-  employee: {
-    login: {
-      title: 'Login | Scientech Ecuador',
-      name: 'Login',
-      target: '/login',
-    },
+  contact: {
+    title: "Contacto | Scientech Ecuador",
+    name: "Contacto",
+    target: "/contacto",
+  },
+  underConstruction: {
+    title: "Esperanos | Scientech Ecuador",
+    name: "Contacto",
+    target: "/under-construction",
   },
 };
 
-export default routes;
+export const protectedRoutes: ProtectedRoutes = {
+  dashboard: {
+    title: "Dashboard | Scientech Ecuador",
+    name: "Dashboard",
+    target: "/dashboard",
+  },
+  calculator: {
+    title: "Calculadora de Importaciones | Scientech Ecuador",
+    name: "Calculadora",
+    target: "/dashboard/calculadora",
+  },
+};

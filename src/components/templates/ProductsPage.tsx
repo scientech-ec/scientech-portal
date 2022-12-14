@@ -1,6 +1,6 @@
-import React from 'react';
+import React from "react";
 
-const ProductsPage = () => {
+const ProductsPage: React.FC = () => {
   return <main>ProductsPage</main>;
 };
 

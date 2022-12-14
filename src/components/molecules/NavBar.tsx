@@ -1,11 +1,10 @@
-import React from 'react';
-import { RouteObject } from '../../interfaces/routesInterface';
-import NavButton from '../atoms/navbar/NavButton';
+import React from "react";
+import { RoutesInterface } from "../../interfaces/routesInterface";
+import NavButton from "../atoms/navbar/NavButton";
+import Scientech from "../atoms/svg/Scientech";
 
 interface Props {
-  pages: {
-    [key: string]: RouteObject;
-  };
+  pages: RoutesInterface;
 }
 
 const NavBar: React.FC<Props> = ({ pages }) => {
@@ -13,7 +12,7 @@ const NavBar: React.FC<Props> = ({ pages }) => {
     <header>
       <nav className="flex justify-between bg-sky-500">
         <div className="flex">
-          <div>scientech-logo</div>
+          <Scientech />
           <div>
             {Object.keys(pages).map((k, i) => (
               <NavButton

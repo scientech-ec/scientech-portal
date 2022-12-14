@@ -4,11 +4,4 @@ export type RouteObject = {
   target: string;
 };
 
-export type RoutesInterface = {
-  client: {
-    [key: string]: RouteObject;
-  };
-  employee: {
-    [key: string]: RouteObject;
-  };
-};
+export type RoutesInterface = Record<string, RouteObject>;

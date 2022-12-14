@@ -4,6 +4,7 @@ module.exports = {
     es2021: true,
   },
   extends: [
+    "prettier",
     "eslint:recommended",
     "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended",
@@ -21,5 +22,7 @@ module.exports = {
     project: ["./tsconfig.eslint.json"],
   },
   plugins: ["react", "@typescript-eslint", "tailwindcss"],
-  rules: {},
+  rules: {
+    "no-console": ["error", { allow: ["warn", "error"] }],
+  },
 };
