@@ -5,6 +5,7 @@ import { useCalculator } from "../../../hooks/useCalculator";
 import { DocumentHeader } from "../../../interfaces/calculatorApp";
 import CustomButton from "../../atoms/apps/CustomButton";
 import SelectDocumentRow from "../../molecules/calculator/SelectDocumentRow";
+import PageSelector from "../../molecules/PageSelector";
 
 /* 
 todo: For pagination:
@@ -27,6 +28,9 @@ interface Props {
 const SelectDocument: React.FC<Props> = ({ handleClose }) => {
   const { readIndex, open, deleteDocument } = useCalculator();
   const [documents, setDocuments] = useState<DocumentHeader[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const maxItemsPerPage = 5;
 
   // todo: add pagination function and loading placeholder
   useEffect(() => {
@@ -50,6 +54,8 @@ const SelectDocument: React.FC<Props> = ({ handleClose }) => {
       console.log(example.getTimestamp(), example.toHexString());
       console.log(example1.toHexString() > example.toHexString());
 
+      const numberOfPages = Math.floor(docs.length / maxItemsPerPage);
+      setTotalPages(numberOfPages);
       setDocuments(docs);
     };
 
@@ -68,14 +74,43 @@ const SelectDocument: React.FC<Props> = ({ handleClose }) => {
     );
   };
 
+  const handlePagination = (step: number) => {
+    if (
+      (step < 0 && currentPage > 1) ||
+      (step > 0 && currentPage < totalPages)
+    ) {
+      setCurrentPage((prevState) => prevState + step);
+    }
+  };
+
+  const paginatedDocuments = (): DocumentHeader[] => {
+    /* 
+    0..4          (5*1 - 5, 5*1)
+    5..9          (5*2 - 5, 5*2)
+    10..14
+    15..19
+    */
+    const lastDocumentIndex = maxItemsPerPage * currentPage;
+    return documents.slice(lastDocumentIndex - 5, lastDocumentIndex);
+  };
+
   return (
     <>
+      <div>
+        <PageSelector
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onFirst={() => setCurrentPage(1)}
+          onLast={() => setCurrentPage(totalPages)}
+          onNext={() => handlePagination(+1)}
+          onPrevious={() => handlePagination(-1)}
+        />
+      </div>
       <div className="grid grid-cols-12 gap-1 border-b px-4 py-6">
-        <div className="rounded-md border bg-sky-500 text-center ">No.</div>
         <div className="col-span-2 rounded-md border bg-sky-500 text-center">
           Nombre
         </div>
-        <div className="col-span-4 rounded-md border bg-sky-500 text-center">
+        <div className="col-span-5 rounded-md border bg-sky-500 text-center">
           Descripción
         </div>
         <div className="col-span-1 rounded-md border bg-sky-500 text-center">
@@ -88,7 +123,7 @@ const SelectDocument: React.FC<Props> = ({ handleClose }) => {
           Acción
         </div>
 
-        {documents.map((doc, index) => (
+        {paginatedDocuments().map((doc, index) => (
           <SelectDocumentRow
             document={doc}
             index={index}
