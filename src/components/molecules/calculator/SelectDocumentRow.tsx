@@ -21,13 +21,10 @@ const SelectDocumentRow: React.FC<Props> = ({
 
   return (
     <React.Fragment key={document._id}>
-      <p className="flex items-center justify-center whitespace-nowrap rounded-md border px-1">
-        {index + 1}
-      </p>
       <p className="col-span-2 flex items-center whitespace-nowrap rounded-md border px-1">
         {document.name}
       </p>
-      <p className="col-span-4 flex items-center whitespace-pre rounded-md border px-1">
+      <p className="col-span-5 flex items-center whitespace-pre rounded-md border px-1">
         {document.description.length > whitespaceLimit
           ? document.description.slice(0, whitespaceLimit) + "..."
           : document.description}
