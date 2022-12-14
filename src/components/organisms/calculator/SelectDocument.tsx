@@ -1,10 +1,10 @@
-import { CheckIcon, TrashIcon, XIcon } from "@heroicons/react/outline";
+import { XIcon } from "@heroicons/react/outline";
 import React, { useEffect, useState } from "react";
 import { BSON } from "realm-web";
-import { toLocalDateAndTime } from "../../../helpers/date";
 import { useCalculator } from "../../../hooks/useCalculator";
 import { DocumentHeader } from "../../../interfaces/calculatorApp";
 import CustomButton from "../../atoms/apps/CustomButton";
+import SelectDocumentRow from "../../molecules/calculator/SelectDocumentRow";
 
 /* 
 todo: For pagination:
@@ -27,7 +27,6 @@ interface Props {
 const SelectDocument: React.FC<Props> = ({ handleClose }) => {
   const { readIndex, open, deleteDocument } = useCalculator();
   const [documents, setDocuments] = useState<DocumentHeader[]>([]);
-  const whitespaceLimit = 40;
 
   // todo: add pagination function and loading placeholder
   useEffect(() => {
@@ -90,39 +89,13 @@ const SelectDocument: React.FC<Props> = ({ handleClose }) => {
         </div>
 
         {documents.map((doc, index) => (
-          <React.Fragment key={doc._id}>
-            <p className="flex items-center justify-center whitespace-nowrap rounded-md border px-1">
-              {index + 1}
-            </p>
-            <p className="col-span-2 flex items-center whitespace-nowrap rounded-md border px-1">
-              {doc.name}
-            </p>
-            <p className="col-span-4 flex items-center whitespace-pre rounded-md border px-1">
-              {doc.description.length > whitespaceLimit
-                ? doc.description.slice(0, whitespaceLimit) + "..."
-                : doc.description}
-            </p>
-            <p className="col-span-1 flex items-center whitespace-nowrap rounded-md border px-1">
-              {doc.articlesQty}
-            </p>
-            <p className="col-span-2 flex items-center whitespace-nowrap rounded-md border px-1">
-              {toLocalDateAndTime(doc.timestamp ?? Date.now())}
-            </p>
-            <CustomButton
-              onClick={() => handleOpen(doc)}
-              variant="success"
-              icon={<CheckIcon className="h-4 w-4" />}
-            >
-              Cargar
-            </CustomButton>
-            <CustomButton
-              onClick={() => handleDelete(doc)}
-              variant="danger"
-              icon={<TrashIcon className="h-4 w-4" />}
-            >
-              Borrar
-            </CustomButton>
-          </React.Fragment>
+          <SelectDocumentRow
+            document={doc}
+            index={index}
+            handleDelete={handleDelete}
+            handleOpen={handleOpen}
+            key={index}
+          />
         ))}
       </div>
       <div className="flex justify-end gap-2 px-4 py-3">
