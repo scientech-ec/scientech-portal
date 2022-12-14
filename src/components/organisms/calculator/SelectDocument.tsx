@@ -1,6 +1,5 @@
 import { XIcon } from "@heroicons/react/outline";
 import React, { useEffect, useState } from "react";
-import { BSON } from "realm-web";
 import { useCalculator } from "../../../hooks/useCalculator";
 import { DocumentHeader } from "../../../interfaces/calculatorApp";
 import CustomButton from "../../atoms/apps/CustomButton";
@@ -36,25 +35,8 @@ const SelectDocument: React.FC<Props> = ({ handleClose }) => {
   useEffect(() => {
     const loadData = async () => {
       const docs = await readIndex();
+      const numberOfPages = Math.ceil(docs.length / maxItemsPerPage);
 
-      for (let index = 0; index < 20; index++) {
-        const element: DocumentHeader = {
-          name: `mock-name-${index}`,
-          description: `art-${index} Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem vel esse minima odio natus magnam totam quam, consectetur laudantium. Vitae?`,
-          articlesQty: index,
-          _id: `article-${index}-mock-data`,
-        };
-
-        docs.push(element);
-      }
-
-      const example = new BSON.ObjectID(docs[0]._id);
-      const example1 = new BSON.ObjectID(docs[1]._id);
-
-      console.log(example.getTimestamp(), example.toHexString());
-      console.log(example1.toHexString() > example.toHexString());
-
-      const numberOfPages = Math.floor(docs.length / maxItemsPerPage);
       setTotalPages(numberOfPages);
       setDocuments(docs);
     };
