@@ -1,6 +1,7 @@
+import { ArrowCircleLeftIcon } from "@heroicons/react/outline";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import React, { useEffect } from "react";
-import { BsArrowLeftCircle } from "react-icons/bs";
+
 import { useNavigate } from "react-router-dom";
 import * as Realm from "realm-web";
 import * as Yup from "yup";
@@ -33,7 +34,7 @@ const LoginPage: React.FC = () => {
 
   return (
     <main className="flex h-screen w-screen items-center justify-center bg-slate-50 px-6">
-      <BsArrowLeftCircle
+      <ArrowCircleLeftIcon
         onClick={() => navigate(-1)}
         className="absolute top-5 left-5 h-12 w-12 cursor-pointer rounded-full text-gray-400 hover:text-gray-600"
       />
@@ -41,7 +42,7 @@ const LoginPage: React.FC = () => {
       <section className="mx-auto flex max-w-sm flex-col gap-6">
         <h1 className="sr-only">Iniciar Sesión</h1>
         <div className="">
-          <Scientech className="" />
+          <Scientech />
           <h2 className="mt-6 text-center text-3xl font-extrabold uppercase text-gray-900">
             Bienvenido
           </h2>

@@ -14,6 +14,12 @@ const PrivateWrapper: React.FC = () => {
     if (!isLoggedIn()) {
       navigate(loginRoute.target);
     }
+  }, []);
+
+  useEffect(() => {
+    if (!isLoggedIn()) {
+      navigate(loginRoute.target);
+    }
   }, [currentUser]);
 
   useEffect(() => {

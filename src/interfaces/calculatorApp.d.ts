@@ -33,10 +33,13 @@ export type ArticlesHeader = {
   type: string;
   title: string;
   initialValue: number | string;
+  field: "input" | "span";
+  startSymbol?: string;
+  endSymbol?: string;
 };
 
 export type CalculationValues = {
-  itemWeight: number;
+  rowWeight: number;
   EXW: number;
   weightFraction: number;
   FOB: number;

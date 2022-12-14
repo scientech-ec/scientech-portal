@@ -11,6 +11,8 @@ export const loadLotData = (
       label: value.name,
       name: value.value,
       value: calculatorData.lot[value.value],
+      startSymbol: value.startSymbol,
+      endSymbol: value.endSymbol,
     })),
   }));
 
@@ -20,5 +22,7 @@ type LotData = {
     label: string;
     name: string;
     value: number;
+    startSymbol?: string;
+    endSymbol?: string;
   }[];
 }[];

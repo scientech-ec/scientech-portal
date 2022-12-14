@@ -9,9 +9,9 @@ const LotDetails: React.FC = () => {
   const lotObject = loadLotData(lotSchema, values);
 
   return (
-    <section className="w-full rounded-md border p-2">
+    <section className="w-full rounded-md border p-4">
       <h5>Detalle de Lote</h5>
-      <div className="flex justify-around">
+      <div className="mt-2 flex justify-around">
         {lotObject.map((category, index) => (
           <LotCard
             key={index}

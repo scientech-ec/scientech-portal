@@ -7,9 +7,16 @@ interface Props {
   handleClose: VoidFunction;
   children: React.ReactNode;
   title: string;
+  modalClasses?: string;
 }
 
-const Modal: React.FC<Props> = ({ children, handleClose, open, title }) => {
+const Modal: React.FC<Props> = ({
+  children,
+  handleClose,
+  open,
+  title,
+  modalClasses = "",
+}) => {
   const escFunction = useCallback(
     (event: { keyCode: number }) => {
       if (event.keyCode === 27 && open) {
@@ -33,9 +40,12 @@ const Modal: React.FC<Props> = ({ children, handleClose, open, title }) => {
         className="fixed  inset-0 flex items-center justify-center bg-black/50"
         onClick={handleClose}
       >
-        <section className="bg-white" onClick={(e) => e.stopPropagation()}>
-          <header className="flex items-start justify-between">
-            <h4>{title}</h4>
+        <section
+          className={`h-auto min-w-[50%] max-w-[80%] bg-white ${modalClasses}`}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <header className="flex items-start justify-between border-b px-4 py-3">
+            <h4 className="grow">{title}</h4>
             <button onClick={handleClose}>
               <CloseIcon />
             </button>

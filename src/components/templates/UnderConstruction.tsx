@@ -1,5 +1,5 @@
+import { UserCircleIcon } from "@heroicons/react/outline";
 import React from "react";
-import { FaUserCircle } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import underConstruction from "../../assets/under-construction.jpg";
 import { loginRoute } from "../../helpers/routes";
@@ -29,7 +29,7 @@ const UnderConstruction: React.FC = () => {
             className="flex items-center space-x-2 rounded-full border py-1 px-2 text-gray-400 hover:text-gray-600 hover:outline-none hover:ring-2 hover:ring-white hover:ring-offset-2 hover:ring-offset-gray-800"
           >
             <span className="text-sm">Iniciar sesión</span>
-            <FaUserCircle className="h-6 w-6" />
+            <UserCircleIcon className="h-6 w-6" />
           </Link>
         </div>
       </div>
