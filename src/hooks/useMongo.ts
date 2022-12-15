@@ -9,5 +9,8 @@ interface CollectionConfig {
 export const useMongo = ({ cluster, db, collection }: CollectionConfig) => {
   const { currentUser } = useRealmApp();
 
-  return currentUser.mongoClient(cluster).db(db).collection(collection);
+  return (
+    currentUser &&
+    currentUser.mongoClient(cluster).db(db).collection(collection)
+  );
 };
