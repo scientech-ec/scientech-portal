@@ -6,10 +6,17 @@ import CustomButton from "../../atoms/apps/CustomButton";
 import ArticleRow from "../../molecules/calculator/ArticleRow";
 
 const ArticlesDetails: React.FC = () => {
-  const { values, addRow } = useCalculator();
+  const { values, addRow, totalWeight } = useCalculator();
+
   return (
     <section className="w-full rounded-md border p-4">
-      <h5>Detalle de Artículos</h5>
+      <div className="flex justify-between">
+        <h5>Detalle de Artículos</h5>
+
+        <p>
+          Peso total: {totalWeight} {totalWeight === 1 ? "libra" : "libras"}
+        </p>
+      </div>
 
       <div className="mt-2 grid grid-cols-24 gap-1">
         {articlesHeader.map((column) => (
