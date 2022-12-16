@@ -4,7 +4,11 @@ import { BSON } from "realm-web";
 import { addArticle, setInitialValues } from "../constants/calculator";
 import { calculateImportation } from "../functions/importCalculator";
 import { loadFromLocalStorage } from "../helpers/loadFromLocalStorage";
-import type { Calculator, DocumentHeader } from "../interfaces/calculatorApp";
+import type {
+  ArticleData,
+  Calculator,
+  DocumentHeader,
+} from "../interfaces/calculatorApp";
 import {
   importCalculatorData,
   importCalculatorHeader,
@@ -30,23 +34,21 @@ interface Context {
   open: (header: DocumentHeader) => Promise<void>;
   deleteDocument: (header: DocumentHeader) => Promise<void>;
   documentInfo: DocumentHeader;
+  totalWeight: number;
 }
 
 const CalculatorContext = createContext<Context>({} as Context);
-
-// todo: Add total weight auto compute
-// todo: 0 total weight constriction
-// todo: min value 1 for qty
 
 export const CalculatorProvider: React.FC<Props> = ({ children }) => {
   const { refreshToken } = useRealmApp();
   const dataMongo = useMongo(importCalculatorData);
   const headerMongo = useMongo(importCalculatorHeader);
-
+  const [totalWeight, setTotalWeight] = useState(0);
   const { calculator, header } = setInitialValues();
   const [values, setValues] = useState<Calculator>(
     loadFromLocalStorage("calculator", calculator)
   );
+
   const [documentInfo, setDocumentInfo] = useState<DocumentHeader>(
     loadFromLocalStorage("header", header)
   );
@@ -81,6 +83,23 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
       })
     );
   };
+
+  /**
+   * Calculate total weight on row modification
+   * @returns totalWeight {number}
+   */
+  const calculateTotalWeight = () => {
+    const calculateRowWeight = (previousValue: number, row: ArticleData) => {
+      const qty = isNaN(row.qty) ? 0 : row.qty;
+      const weight = isNaN(row.unitWeight) ? 0 : row.unitWeight;
+
+      return previousValue + qty * weight;
+    };
+    return values.articles.reduce(calculateRowWeight, 0);
+  };
+  useEffect(() => {
+    setTotalWeight(calculateTotalWeight());
+  }, [values]);
 
   /**
    * Updates document information for referrence
@@ -260,6 +279,7 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
     open,
     deleteDocument,
     documentInfo,
+    totalWeight,
   };
   return (
     <CalculatorContext.Provider value={contextValue}>
