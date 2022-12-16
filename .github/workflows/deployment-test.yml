@@ -1,7 +1,4 @@
-on:
-  push:
-    branches:
-      - dev
+on: pull-request
 name: 🚀 Test deploy website on push
 jobs:
   web-deploy:
