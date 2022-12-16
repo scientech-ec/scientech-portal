@@ -4,6 +4,7 @@ import { BSON } from "realm-web";
 import { addArticle, setInitialValues } from "../constants/calculator";
 import { calculateImportation } from "../functions/importCalculator";
 import { loadFromLocalStorage } from "../helpers/loadFromLocalStorage";
+import { roundTo } from "../helpers/roundNumber";
 import type {
   ArticleData,
   Calculator,
@@ -98,7 +99,7 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
     return values.articles.reduce(calculateRowWeight, 0);
   };
   useEffect(() => {
-    setTotalWeight(calculateTotalWeight());
+    setTotalWeight(roundTo(calculateTotalWeight()));
   }, [values]);
 
   /**
