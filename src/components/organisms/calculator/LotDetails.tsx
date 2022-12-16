@@ -5,8 +5,8 @@ import { useCalculator } from "../../../hooks/useCalculator";
 import LotCard from "../../molecules/calculator/LotCard";
 
 const LotDetails: React.FC = () => {
-  const { values } = useCalculator();
-  const lotObject = loadLotData(lotSchema, values);
+  const { calculatorInputs } = useCalculator();
+  const lotObject = loadLotData(lotSchema, calculatorInputs);
 
   return (
     <section className="w-full rounded-md border p-4">

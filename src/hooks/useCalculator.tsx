@@ -22,7 +22,7 @@ interface Props {
 }
 
 interface Context {
-  values: Calculator;
+  calculatorInputs: Calculator;
   handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   updateDocumentHeader: (event: React.ChangeEvent<HTMLInputElement>) => void;
   addRow: VoidFunction;
@@ -46,7 +46,7 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
   const headerMongo = useMongo(importCalculatorHeader);
   const [totalWeight, setTotalWeight] = useState(0);
   const { calculator, header } = setInitialValues();
-  const [values, setValues] = useState<Calculator>(
+  const [calculatorInputs, setCalculatorInputs] = useState<Calculator>(
     loadFromLocalStorage("calculator", calculator)
   );
 
@@ -56,8 +56,8 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
 
   /** Stores in  local storage to prevent calculator data lost */
   useEffect(() => {
-    localStorage.setItem("calculator", JSON.stringify(values));
-  }, [values]);
+    localStorage.setItem("calculator", JSON.stringify(calculatorInputs));
+  }, [calculatorInputs]);
 
   /** Stores in  local storage to prevent calculator data lost */
   useEffect(() => {
@@ -72,7 +72,7 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
     const { value, name } = event.target;
     const pathArray = name.split(".");
 
-    setValues(
+    setCalculatorInputs(
       produce((draft) => {
         if (pathArray.includes("articles")) {
           draft.articles[parseInt(pathArray[1])][pathArray[2]] =
@@ -96,11 +96,11 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
 
       return previousValue + qty * weight;
     };
-    return values.articles.reduce(calculateRowWeight, 0);
+    return calculatorInputs.articles.reduce(calculateRowWeight, 0);
   };
   useEffect(() => {
     setTotalWeight(roundTo(calculateTotalWeight()));
-  }, [values]);
+  }, [calculatorInputs]);
 
   /**
    * Updates document information for referrence
@@ -116,7 +116,7 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
    * Add a new row to the current calculation
    */
   const addRow = () => {
-    setValues((prevState) => ({
+    setCalculatorInputs((prevState) => ({
       ...prevState,
       articles: [...prevState.articles, addArticle()],
     }));
@@ -135,10 +135,10 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
    * @param index index number of the article to delete
    */
   const deleteRow = (index: number) => {
-    const articles = values.articles.slice();
+    const articles = calculatorInputs.articles.slice();
     articles.splice(index, 1);
 
-    setValues({ ...values, articles });
+    setCalculatorInputs({ ...calculatorInputs, articles });
 
     setDocumentInfo(
       produce((draft) => {
@@ -151,13 +151,16 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
    * Compute articles prices based on given inputs
    */
   const compute = () => {
-    if (values.articles.length === 0 || Object.keys(values.lot).length === 0)
+    if (
+      calculatorInputs.articles.length === 0 ||
+      Object.keys(calculatorInputs.lot).length === 0
+    )
       return;
 
-    const articles = calculateImportation(values);
+    const articles = calculateImportation(calculatorInputs);
 
     if (articles) {
-      setValues({ ...values, articles: [...articles] });
+      setCalculatorInputs({ ...calculatorInputs, articles: [...articles] });
     }
   };
 
@@ -166,7 +169,7 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
    */
   const reset = () => {
     const { calculator, header } = setInitialValues();
-    setValues(calculator);
+    setCalculatorInputs(calculator);
     setDocumentInfo(header);
   };
 
@@ -184,14 +187,14 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
       timestamp: Date.now(),
     };
 
-    const newData = { ...values, _id: dataId };
+    const newData = { ...calculatorInputs, _id: dataId };
 
     try {
       await refreshToken();
       await headerMongo.insertOne(newHeader);
       await dataMongo.insertOne(newData);
 
-      setValues(newData);
+      setCalculatorInputs(newData);
       setDocumentInfo(newHeader);
     } catch (error) {
       console.error(error);
@@ -215,13 +218,13 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
     };
 
     const newData: Calculator = {
-      ...values,
-      _id: new BSON.ObjectID(values._id),
+      ...calculatorInputs,
+      _id: new BSON.ObjectID(calculatorInputs._id),
     };
 
     try {
       await refreshToken();
-      await dataMongo.findOneAndReplace({ _id: newData._id }, values);
+      await dataMongo.findOneAndReplace({ _id: newData._id }, calculatorInputs);
       await headerMongo.findOneAndReplace({ _id: newHeader._id }, newHeader);
     } catch (error) {
       console.error(error);
@@ -249,7 +252,7 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
     const docData = await dataMongo.findOne({ _id: dataId });
 
     setDocumentInfo(docHeader);
-    setValues(docData);
+    setCalculatorInputs(docData);
   };
 
   /**
@@ -266,7 +269,7 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
   };
 
   const contextValue = {
-    values,
+    calculatorInputs,
     handleChange,
     updateDocumentHeader,
     addRow,

@@ -6,7 +6,7 @@ import CustomButton from "../../atoms/apps/CustomButton";
 import ArticleRow from "../../molecules/calculator/ArticleRow";
 
 const ArticlesDetails: React.FC = () => {
-  const { values, addRow, totalWeight } = useCalculator();
+  const { calculatorInputs, addRow, totalWeight } = useCalculator();
 
   return (
     <section className="w-full rounded-md border p-4">
@@ -38,7 +38,7 @@ const ArticlesDetails: React.FC = () => {
           Agregar ítem
         </CustomButton>
 
-        {values.articles.map((article, idx) => (
+        {calculatorInputs.articles.map((article, idx) => (
           <ArticleRow article={article} index={idx} key={idx} />
         ))}
       </div>
