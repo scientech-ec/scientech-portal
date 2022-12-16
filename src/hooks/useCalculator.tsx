@@ -140,7 +140,6 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
 
     setValues({ ...values, articles });
 
-    // todo: Decrease article counter on header document
     setDocumentInfo(
       produce((draft) => {
         draft.articlesQty -= 1;
