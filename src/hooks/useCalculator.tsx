@@ -49,17 +49,13 @@ interface Context {
 const CalculatorContext = createContext<Context>({} as Context);
 
 export const CalculatorProvider: React.FC<Props> = ({ children }) => {
+  const { refreshToken } = useRealmApp();
+
   /* Connect to mongodb collection */
-  const headersCollection = new CalculatorStorage(
+  const headersDatabase = new CalculatorStorage(
     useMongo(importCalculatorHeader)
   );
-  const inputsCollection = new CalculatorStorage(
-    useMongo(importCalculatorData)
-  );
-
-  const { refreshToken } = useRealmApp();
-  const dataMongo = useMongo(importCalculatorData);
-  const headerMongo = useMongo(importCalculatorHeader);
+  const inputsDatabase = new CalculatorStorage(useMongo(importCalculatorData));
 
   /* Load data from local storage if possible */
   const inputsInitialValue: Calculator =
@@ -127,7 +123,7 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
   const updateDocumentHeader = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value, name } = event.target;
 
-    setCalculatorHeader({ ...calculatorHeader, [name]: value });
+    setCalculatorHeader((prevState) => ({ ...prevState, [name]: value }));
   };
 
   /**
@@ -173,6 +169,7 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
     )
       return;
 
+    // todo: split outputs
     const articles = calculateImportation(calculatorInputs);
 
     if (articles) {
@@ -195,22 +192,22 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
     const headerId = new BSON.ObjectID();
     const dataId = new BSON.ObjectID();
 
-    const newHeader: DocumentHeader = {
+    const newHeaderData: DocumentHeader = {
       ...calculatorHeader,
       _id: headerId,
       documentData_Id: dataId,
       timestamp: Date.now(),
     };
 
-    const newData = { ...calculatorInputs, _id: dataId };
+    const newInputsData = { ...calculatorInputs, _id: dataId };
 
     try {
       await refreshToken();
-      await headerMongo.insertOne(newHeader);
-      await dataMongo.insertOne(newData);
+      await inputsDatabase.saveNewDocument(newInputsData);
+      await headersDatabase.saveNewDocument(newHeaderData);
 
-      setCalculatorInputs(newData);
-      setCalculatorHeader(newHeader);
+      setCalculatorInputs(newInputsData);
+      setCalculatorHeader(newHeaderData);
     } catch (error) {
       console.error(error);
     }
@@ -225,22 +222,18 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
       return;
     }
 
+    const headerID = new BSON.ObjectID(calculatorHeader._id);
+    const inputsID = new BSON.ObjectID(calculatorHeader.documentData_Id);
+
     const newHeader: DocumentHeader = {
       ...calculatorHeader,
-      _id: new BSON.ObjectID(calculatorHeader._id),
-      documentData_Id: new BSON.ObjectID(calculatorHeader.documentData_Id),
       timestamp: Date.now(),
-    };
-
-    const newData: Calculator = {
-      ...calculatorInputs,
-      _id: new BSON.ObjectID(calculatorInputs._id),
     };
 
     try {
       await refreshToken();
-      await dataMongo.findOneAndReplace({ _id: newData._id }, calculatorInputs);
-      await headerMongo.findOneAndReplace({ _id: newHeader._id }, newHeader);
+      await inputsDatabase.updateDocument(inputsID, calculatorInputs);
+      await headersDatabase.updateDocument(headerID, newHeader);
     } catch (error) {
       console.error(error);
     }
@@ -250,8 +243,8 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
    * Fetch headers from database
    * @returns Document headers array
    */
-  const readIndex = async (): Promise<DocumentHeader[]> => {
-    return await headerMongo.find({});
+  const readIndex = async () => {
+    return await headersDatabase.getIndex();
   };
 
   /**
@@ -259,15 +252,13 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
    * @param header Document header information
    */
   const open = async (header: DocumentHeader) => {
-    const { _id, documentData_Id } = header;
-    const headerId = new BSON.ObjectID(_id);
-    const dataId = new BSON.ObjectID(documentData_Id);
+    const { _id: headerID, documentData_Id: inputsID } = header;
 
-    const docHeader = await headerMongo.findOne({ _id: headerId });
-    const docData = await dataMongo.findOne({ _id: dataId });
+    const downloadedInputs = await inputsDatabase.getDocument(inputsID);
+    const downloadedHeader = await headersDatabase.getDocument(headerID);
 
-    setCalculatorHeader(docHeader);
-    setCalculatorInputs(docData);
+    setCalculatorHeader(downloadedHeader);
+    setCalculatorInputs(downloadedInputs);
   };
 
   /**
@@ -275,12 +266,10 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
    * @param header Document header information
    */
   const deleteDocument = async (header: DocumentHeader) => {
-    const { _id, documentData_Id } = header;
-    const headerId = new BSON.ObjectID(_id);
-    const dataId = new BSON.ObjectID(documentData_Id);
+    const { _id: headerID, documentData_Id: inputsID } = header;
 
-    await headerMongo.deleteOne({ _id: headerId });
-    await dataMongo.deleteOne({ _id: dataId });
+    inputsDatabase.deleteDocument(inputsID);
+    headersDatabase.deleteDocument(headerID);
   };
 
   const contextValue = {
