@@ -3,7 +3,10 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { BSON } from "realm-web";
 import { addArticle, setInitialValues } from "../constants/calculator";
 import { calculateImportation } from "../functions/importCalculator";
-import { loadFromLocalStorage } from "../helpers/loadFromLocalStorage";
+import {
+  loadFromLocalStorage,
+  storeInLocalStorage,
+} from "../helpers/localStorage";
 import { roundTo } from "../helpers/roundNumber";
 import type {
   ArticleData,
@@ -56,12 +59,12 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
 
   /** Stores in  local storage to prevent calculator data lost */
   useEffect(() => {
-    localStorage.setItem("calculator", JSON.stringify(calculatorInputs));
+    storeInLocalStorage("calculator", calculatorInputs);
   }, [calculatorInputs]);
 
   /** Stores in  local storage to prevent calculator data lost */
   useEffect(() => {
-    localStorage.setItem("header", JSON.stringify(documentInfo));
+    storeInLocalStorage("header", documentInfo);
   }, [documentInfo]);
 
   /**
