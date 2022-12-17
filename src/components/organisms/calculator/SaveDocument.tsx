@@ -13,7 +13,7 @@ interface Props {
 }
 
 const SaveDocument: React.FC<Props> = ({ handleClose }) => {
-  const { updateDocumentHeader, documentInfo, saveAs, update } =
+  const { updateDocumentHeader, calculatorHeader, saveAs, update } =
     useCalculator();
 
   const handleSaveAs = () => {
@@ -35,7 +35,7 @@ const SaveDocument: React.FC<Props> = ({ handleClose }) => {
           type="text"
           id="name"
           name="name"
-          value={documentInfo.name}
+          value={calculatorHeader.name}
           onChange={updateDocumentHeader}
         />
 
@@ -47,7 +47,7 @@ const SaveDocument: React.FC<Props> = ({ handleClose }) => {
           type="text"
           id="description"
           name="description"
-          value={documentInfo.description}
+          value={calculatorHeader.description}
           onChange={updateDocumentHeader}
         />
       </div>

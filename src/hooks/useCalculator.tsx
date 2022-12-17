@@ -37,7 +37,7 @@ interface Context {
   readIndex: () => Promise<DocumentHeader[]>;
   open: (header: DocumentHeader) => Promise<void>;
   deleteDocument: (header: DocumentHeader) => Promise<void>;
-  documentInfo: DocumentHeader;
+  calculatorHeader: DocumentHeader;
   totalWeight: number;
 }
 
@@ -53,7 +53,7 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
     loadFromLocalStorage("calculator", calculator)
   );
 
-  const [documentInfo, setDocumentInfo] = useState<DocumentHeader>(
+  const [calculatorHeader, setCalculatorHeader] = useState<DocumentHeader>(
     loadFromLocalStorage("header", header)
   );
 
@@ -64,8 +64,8 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
 
   /** Stores in  local storage to prevent calculator data lost */
   useEffect(() => {
-    storeInLocalStorage("header", documentInfo);
-  }, [documentInfo]);
+    storeInLocalStorage("header", calculatorHeader);
+  }, [calculatorHeader]);
 
   /**
    * Stores the data in the calculator object
@@ -112,7 +112,7 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
   const updateDocumentHeader = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value, name } = event.target;
 
-    setDocumentInfo({ ...documentInfo, [name]: value });
+    setCalculatorHeader({ ...calculatorHeader, [name]: value });
   };
 
   /**
@@ -124,9 +124,7 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
       articles: [...prevState.articles, addArticle()],
     }));
 
-    // todo: Increase article counter on header document
-
-    setDocumentInfo(
+    setCalculatorHeader(
       produce((draft) => {
         draft.articlesQty += 1;
       })
@@ -143,7 +141,7 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
 
     setCalculatorInputs({ ...calculatorInputs, articles });
 
-    setDocumentInfo(
+    setCalculatorHeader(
       produce((draft) => {
         draft.articlesQty -= 1;
       })
@@ -173,7 +171,7 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
   const reset = () => {
     const { calculator, header } = setInitialValues();
     setCalculatorInputs(calculator);
-    setDocumentInfo(header);
+    setCalculatorHeader(header);
   };
 
   /**
@@ -184,7 +182,7 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
     const dataId = new BSON.ObjectID();
 
     const newHeader: DocumentHeader = {
-      ...documentInfo,
+      ...calculatorHeader,
       _id: headerId,
       documentData_Id: dataId,
       timestamp: Date.now(),
@@ -198,7 +196,7 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
       await dataMongo.insertOne(newData);
 
       setCalculatorInputs(newData);
-      setDocumentInfo(newHeader);
+      setCalculatorHeader(newHeader);
     } catch (error) {
       console.error(error);
     }
@@ -208,15 +206,15 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
    * Update the existant document in the cloud
    */
   const update = async () => {
-    if (!("documentData_Id" in documentInfo)) {
+    if (!("documentData_Id" in calculatorHeader)) {
       saveAs();
       return;
     }
 
     const newHeader: DocumentHeader = {
-      ...documentInfo,
-      _id: new BSON.ObjectID(documentInfo._id),
-      documentData_Id: new BSON.ObjectID(documentInfo.documentData_Id),
+      ...calculatorHeader,
+      _id: new BSON.ObjectID(calculatorHeader._id),
+      documentData_Id: new BSON.ObjectID(calculatorHeader.documentData_Id),
       timestamp: Date.now(),
     };
 
@@ -254,7 +252,7 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
     const docHeader = await headerMongo.findOne({ _id: headerId });
     const docData = await dataMongo.findOne({ _id: dataId });
 
-    setDocumentInfo(docHeader);
+    setCalculatorHeader(docHeader);
     setCalculatorInputs(docData);
   };
 
@@ -284,7 +282,7 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
     readIndex,
     open,
     deleteDocument,
-    documentInfo,
+    calculatorHeader,
     totalWeight,
   };
   return (
