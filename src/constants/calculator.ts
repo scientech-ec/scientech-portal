@@ -120,25 +120,21 @@ export const addArticle = () => {
   return newArticle as ArticleData;
 };
 
-export const setInitialValues = () => {
-  const calculator: Calculator = {
-    lot: {
-      originTaxes: 0,
-      originFleet: 0,
-      importFleetPerLibre: 0,
-      importProcedure: 0,
-      customsAgent: 0,
-      localFleet: 0,
-      bankExpenses: 0,
-    },
-    articles: [],
-  };
+export const inputsDefault = (): Calculator => ({
+  lot: {
+    originTaxes: 0,
+    originFleet: 0,
+    importFleetPerLibre: 0,
+    importProcedure: 0,
+    customsAgent: 0,
+    localFleet: 0,
+    bankExpenses: 0,
+  },
+  articles: [],
+});
 
-  const header: DocumentHeader = {
-    name: "",
-    description: "",
-    articlesQty: 0,
-  };
-
-  return { calculator, header };
-};
+export const headerDefault = (): DocumentHeader => ({
+  name: "",
+  description: "",
+  articlesQty: 0,
+});

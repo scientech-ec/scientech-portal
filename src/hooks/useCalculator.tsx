@@ -1,7 +1,11 @@
 import produce from "immer";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { BSON } from "realm-web";
-import { addArticle, setInitialValues } from "../constants/calculator";
+import {
+  addArticle,
+  headerDefault,
+  inputsDefault,
+} from "../constants/calculator";
 import { calculateImportation } from "../functions/importCalculator";
 import {
   loadFromLocalStorage,
@@ -17,6 +21,7 @@ import {
   importCalculatorData,
   importCalculatorHeader,
 } from "../services/mongoDB/importCalculatorConfig";
+import { CalculatorStorage } from "../services/mongoDB/storeCalculatorData";
 import { useMongo } from "./useMongo";
 import { useRealmApp } from "./useRealmApp";
 
@@ -44,31 +49,41 @@ interface Context {
 const CalculatorContext = createContext<Context>({} as Context);
 
 export const CalculatorProvider: React.FC<Props> = ({ children }) => {
+  /* Connect to mongodb collection */
+  const headersCollection = new CalculatorStorage(
+    useMongo(importCalculatorHeader)
+  );
+  const inputsCollection = new CalculatorStorage(
+    useMongo(importCalculatorData)
+  );
+
   const { refreshToken } = useRealmApp();
   const dataMongo = useMongo(importCalculatorData);
   const headerMongo = useMongo(importCalculatorHeader);
-  const [totalWeight, setTotalWeight] = useState(0);
-  const { calculator, header } = setInitialValues();
-  const [calculatorInputs, setCalculatorInputs] = useState<Calculator>(
-    loadFromLocalStorage("calculator", calculator)
-  );
 
-  const [calculatorHeader, setCalculatorHeader] = useState<DocumentHeader>(
-    loadFromLocalStorage("header", header)
-  );
+  /* Load data from local storage if possible */
+  const inputsInitialValue: Calculator =
+    loadFromLocalStorage("inputs") ?? inputsDefault();
+  const headerInitialValue: DocumentHeader =
+    loadFromLocalStorage("header") ?? headerDefault();
+
+  /* Initialize state */
+  const [totalWeight, setTotalWeight] = useState(0);
+  const [calculatorInputs, setCalculatorInputs] =
+    useState<Calculator>(inputsInitialValue);
+  const [calculatorHeader, setCalculatorHeader] =
+    useState<DocumentHeader>(headerInitialValue);
 
   /** Stores in  local storage to prevent calculator data lost */
   useEffect(() => {
-    storeInLocalStorage("calculator", calculatorInputs);
+    storeInLocalStorage("inputs", calculatorInputs);
   }, [calculatorInputs]);
-
-  /** Stores in  local storage to prevent calculator data lost */
   useEffect(() => {
     storeInLocalStorage("header", calculatorHeader);
   }, [calculatorHeader]);
 
   /**
-   * Stores the data in the calculator object
+   * Updates the data in the calculator object
    * @param event Input event handler
    */
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -169,9 +184,8 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
    * Reset current document values
    */
   const reset = () => {
-    const { calculator, header } = setInitialValues();
-    setCalculatorInputs(calculator);
-    setCalculatorHeader(header);
+    setCalculatorInputs(inputsDefault());
+    setCalculatorHeader(headerDefault());
   };
 
   /**
