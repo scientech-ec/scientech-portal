@@ -18,11 +18,10 @@ import type {
   DocumentHeader,
 } from "../interfaces/calculatorApp";
 import {
-  importCalculatorData,
-  importCalculatorHeader,
-} from "../services/mongoDB/importCalculatorConfig";
-import { CalculatorStorage } from "../services/mongoDB/storeCalculatorData";
-import { useMongo } from "./useMongo";
+  CalculatorStorage,
+  headerDatabaseId,
+  inputsDatabaseId,
+} from "../services/mongoDB/storeCalculatorData";
 import { useRealmApp } from "./useRealmApp";
 
 interface Props {
@@ -49,13 +48,11 @@ interface Context {
 const CalculatorContext = createContext<Context>({} as Context);
 
 export const CalculatorProvider: React.FC<Props> = ({ children }) => {
-  const { refreshToken } = useRealmApp();
+  const { refreshToken, currentUser } = useRealmApp();
 
   /* Connect to mongodb collection */
-  const headersDatabase = new CalculatorStorage(
-    useMongo(importCalculatorHeader)
-  );
-  const inputsDatabase = new CalculatorStorage(useMongo(importCalculatorData));
+  const headersDatabase = new CalculatorStorage(currentUser, headerDatabaseId);
+  const inputsDatabase = new CalculatorStorage(currentUser, inputsDatabaseId);
 
   /* Load data from local storage if possible */
   const inputsInitialValue: Calculator =

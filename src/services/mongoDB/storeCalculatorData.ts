@@ -1,11 +1,30 @@
-import { BSON } from "realm-web";
+import { BSON, User } from "realm-web";
 import { DocumentHeader } from "../../interfaces/calculatorApp";
+
+export interface mongoDBDatabaseID {
+  cluster: string;
+  db: string;
+  collection: string;
+}
+
+export const inputsDatabaseId: mongoDBDatabaseID = {
+  cluster: import.meta.env.VITE_CLUSTER_NAME,
+  db: import.meta.env.VITE_DB_IMPORT_CALCULATOR,
+  collection: import.meta.env.VITE_IMPORT_CALCULATOR_DATA,
+};
+
+export const headerDatabaseId: mongoDBDatabaseID = {
+  cluster: import.meta.env.VITE_CLUSTER_NAME,
+  db: import.meta.env.VITE_DB_IMPORT_CALCULATOR,
+  collection: import.meta.env.VITE_IMPORT_CALCULATOR_HEADER,
+};
 
 export class CalculatorStorage {
   #database: Realm.Services.MongoDB.MongoDBCollection<any>;
 
-  constructor(mongoDBId: Realm.Services.MongoDB.MongoDBCollection<any>) {
-    this.#database = mongoDBId;
+  constructor(user: User, { cluster, db, collection }: mongoDBDatabaseID) {
+    this.#database =
+      user && user.mongoClient(cluster).db(db).collection(collection);
   }
 
   getIndex = async (): Promise<DocumentHeader[]> => {
