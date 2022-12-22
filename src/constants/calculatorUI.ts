@@ -1,6 +1,9 @@
-import { ArticlesHeader, LotSchema } from "../interfaces/calculatorApp";
+import {
+  ArticlesTableHeaderSchema,
+  LotTableSchema,
+} from "../interfaces/calculatorApp";
 
-export const inputSchema: ArticlesHeader[] = [
+export const inputSchema: ArticlesTableHeaderSchema[] = [
   {
     name: "qty",
     field: "input",
@@ -49,7 +52,7 @@ export const inputSchema: ArticlesHeader[] = [
   },
 ];
 
-const outputSchema = [
+export const outputSchema: ArticlesTableHeaderSchema[] = [
   {
     name: "bunchCost",
     field: "span",
@@ -78,7 +81,7 @@ const outputSchema = [
 
 export const articleSchema = [...inputSchema, ...outputSchema];
 
-export const lotSchema: LotSchema[] = [
+export const lotSchema: LotTableSchema[] = [
   {
     title: "Costos en Origen",
     values: [

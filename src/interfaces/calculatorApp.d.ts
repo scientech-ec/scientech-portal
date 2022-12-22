@@ -1,4 +1,4 @@
-export type LotCost = {
+export type LotCostInputs = {
   originTaxes: number;
   originFleet: number;
   importFleetPerLibre: number;
@@ -23,22 +23,12 @@ export type ArticleInputs = {
 };
 
 export type CalculatorInputs = {
-  lot: LotCost;
+  lot: LotCostInputs;
   articles: ArticleInputs[];
   _id?: BSON.ObjectID;
 };
 
-export type ArticlesHeader = {
-  name: string;
-  type: string;
-  title: string;
-  initialValue: number | string;
-  field: "input" | "span";
-  startSymbol?: string;
-  endSymbol?: string;
-};
-
-export type CalculatorOutputs = {
+export type ArticleOutputs = {
   rowWeight: number;
   EXW: number;
   weightFraction: number;
@@ -61,7 +51,7 @@ export type DocumentHeader = {
   _id?: BSON.ObjectID;
 };
 
-export type LotSchema = {
+export type LotTableSchema = {
   title: string;
   values: {
     name: string;
@@ -70,4 +60,14 @@ export type LotSchema = {
     startSymbol?: string;
     endSymbol?: string;
   }[];
+};
+
+export type ArticlesTableHeaderSchema = {
+  name: string;
+  type: string;
+  title: string;
+  initialValue: number | string;
+  field: "input" | "span";
+  startSymbol?: string;
+  endSymbol?: string;
 };

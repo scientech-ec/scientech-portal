@@ -1,10 +1,10 @@
 import { TrashIcon } from "@heroicons/react/outline";
 import React from "react";
-import { articleSchema } from "../../../constants/calculator";
+import { articleSchema } from "../../../constants/calculatorUI";
 import { useCalculator } from "../../../hooks/useCalculator";
 import type { ArticleInputs } from "../../../interfaces/calculatorApp";
 import CustomButton from "../../atoms/apps/CustomButton";
-import CustomInput from "../../atoms/apps/CustomInput";
+import ArticleCell from "./ArticleCell";
 
 interface Props {
   article: ArticleInputs;
@@ -16,34 +16,14 @@ const ArticleRow: React.FC<Props> = ({ article, index }) => {
 
   return (
     <>
-      {articleSchema.map((column) =>
-        column.field === "input" ? (
-          <div
-            key={column.name}
-            className={`flex items-center justify-between gap-1 rounded-md  border px-2 ${
-              column.name === "name" ? "col-span-6" : "col-span-2"
-            }`}
-          >
-            <span className="text-xs text-gray-600">{column.startSymbol}</span>
-            <CustomInput
-              className="h-full w-full rounded-none border-none focus:outline-none"
-              type={column.type}
-              value={article[column.name]}
-              name={`articles.${index}.${column.name}`}
-            />
-            <span className="text-xs text-gray-600">{column.endSymbol}</span>
-          </div>
-        ) : (
-          <div
-            key={column.name}
-            className="col-span-2 flex items-center justify-between gap-1 rounded-md border bg-gray-100 px-2"
-          >
-            <span className="text-xs text-gray-600">{column.startSymbol}</span>
-            <span className="grow">{article[column.name]}</span>
-            <span className="text-xs text-gray-600">{column.endSymbol}</span>
-          </div>
-        )
-      )}
+      {articleSchema.map((column) => (
+        <ArticleCell
+          index={index}
+          key={column.name}
+          schema={column}
+          value={article[column.name]}
+        />
+      ))}
       <CustomButton
         className="col-span-2 justify-center"
         onClick={() => deleteRow(index)}

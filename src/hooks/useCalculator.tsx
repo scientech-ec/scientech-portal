@@ -2,7 +2,7 @@ import produce from "immer";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { BSON } from "realm-web";
 import {
-  addArticle,
+  addInputsRow,
   headerDefault,
   inputsDefault,
 } from "../constants/calculator";
@@ -14,8 +14,8 @@ import {
 import { roundTo } from "../helpers/roundNumber";
 import type {
   ArticleInputs,
+  ArticleOutputs,
   CalculatorInputs,
-  CalculatorOutputs,
   DocumentHeader,
 } from "../interfaces/calculatorApp";
 import {
@@ -63,9 +63,9 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
 
   /* Initialize state */
   const [totalWeight, setTotalWeight] = useState(0);
-  const [calculatorOutputs, setCalculatorOutputs] = useState<
-    CalculatorOutputs[]
-  >([] as CalculatorOutputs[]);
+  const [calculatorOutputs, setCalculatorOutputs] = useState<ArticleOutputs[]>(
+    [] as ArticleOutputs[]
+  );
   const [calculatorInputs, setCalculatorInputs] =
     useState<CalculatorInputs>(inputsInitialValue);
   const [calculatorHeader, setCalculatorHeader] =
@@ -133,13 +133,10 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
   const addRow = () => {
     setCalculatorInputs((prevState) => ({
       ...prevState,
-      articles: [...prevState.articles, addArticle()],
+      articles: [...prevState.articles, addInputsRow()],
     }));
 
-    setCalculatorOutputs((prevState) => [
-      ...prevState,
-      {} as CalculatorOutputs,
-    ]);
+    setCalculatorOutputs((prevState) => [...prevState, {} as ArticleOutputs]);
 
     setCalculatorHeader(
       produce((draft) => {

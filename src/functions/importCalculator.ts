@@ -1,8 +1,8 @@
 import { roundTo } from "../helpers/roundNumber";
 import type {
   ArticleInputs,
+  ArticleOutputs,
   CalculatorInputs,
-  CalculatorOutputs,
 } from "../interfaces/calculatorApp";
 
 const getSafeNumber = (value: any): number => {
@@ -34,8 +34,8 @@ export const calculateImportation = (values: CalculatorInputs) => {
       } as ArticleInputs)
   );
 
-  const outputs: CalculatorOutputs[] = new Array(articlesSource.length).fill(
-    {} as CalculatorOutputs
+  const outputs: ArticleOutputs[] = new Array(articlesSource.length).fill(
+    {} as ArticleOutputs
   );
 
   const safeBankExpenses = getSafeNumber(bankExpenses);
