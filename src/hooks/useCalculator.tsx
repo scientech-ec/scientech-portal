@@ -60,14 +60,15 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
   /* Load data from local storage if possible */
   const inputsInitialValue: CalculatorInputs =
     loadFromLocalStorage("inputs") ?? inputsDefault();
+  const outputsInitialValue: ArticleOutputs[] =
+    loadFromLocalStorage("outputs") ?? [];
   const headerInitialValue: DocumentHeader =
     loadFromLocalStorage("header") ?? headerDefault();
 
   /* Initialize state */
   const [totalWeight, setTotalWeight] = useState(0);
-  const [calculatorOutputs, setCalculatorOutputs] = useState<ArticleOutputs[]>(
-    [] as ArticleOutputs[]
-  );
+  const [calculatorOutputs, setCalculatorOutputs] =
+    useState<ArticleOutputs[]>(outputsInitialValue);
   const [calculatorInputs, setCalculatorInputs] =
     useState<CalculatorInputs>(inputsInitialValue);
   const [calculatorHeader, setCalculatorHeader] =
@@ -80,6 +81,9 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
   useEffect(() => {
     storeInLocalStorage("header", calculatorHeader);
   }, [calculatorHeader]);
+  useEffect(() => {
+    storeInLocalStorage("outputs", calculatorOutputs);
+  }, [calculatorOutputs]);
 
   /**
    * Updates the data in the calculator object
