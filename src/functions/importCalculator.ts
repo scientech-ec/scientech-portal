@@ -7,6 +7,10 @@ import type {
 
 type ArticlesType = ArticleData & CalculationValues;
 
+const getSafeNumber = (value: any): number => {
+  return isNaN(value) ? 0 : value;
+};
+
 export const calculateImportation = (values: Calculator) => {
   const ISDTax = 0.04;
   const fodinfaTax = 0.005;
@@ -31,25 +35,23 @@ export const calculateImportation = (values: Calculator) => {
       } as ArticlesType)
   );
 
-  const bankExpensesSafe = isNaN(bankExpenses) ? 0 : bankExpenses;
-  const customsAgentSafe = isNaN(customsAgent) ? 0 : customsAgent;
-  const importFleetPerLibreSafe = isNaN(importFleetPerLibre)
-    ? 0
-    : importFleetPerLibre;
-  const importProcedureSafe = isNaN(importProcedure) ? 0 : importProcedure;
-  const localFleetSafe = isNaN(localFleet) ? 0 : localFleet;
-  const originFleetSafe = isNaN(originFleet) ? 0 : originFleet;
-  const originTaxesSafe = isNaN(originTaxes) ? 0 : originTaxes;
+  const bankExpensesSafe = getSafeNumber(bankExpenses);
+  const customsAgentSafe = getSafeNumber(customsAgent);
+  const importFleetPerLibreSafe = getSafeNumber(importFleetPerLibre);
+  const importProcedureSafe = getSafeNumber(importProcedure);
+  const localFleetSafe = getSafeNumber(localFleet);
+  const originFleetSafe = getSafeNumber(originFleet);
+  const originTaxesSafe = getSafeNumber(originTaxes);
 
   let totalWeight = 0;
   let totalFOB = 0;
 
   articles.forEach((row) => {
     const rowWeight = row.qty * row.unitWeight;
-    row.rowWeight = isNaN(rowWeight) ? 0 : rowWeight;
+    row.rowWeight = getSafeNumber(rowWeight);
 
     const EXW = (row.qty * row.unitPrice * (100 + originTaxesSafe)) / 100;
-    row.EXW = isNaN(EXW) ? 0 : EXW;
+    row.EXW = getSafeNumber(EXW);
 
     if (row.EXW > 0) {
       totalWeight += row.rowWeight;
@@ -72,7 +74,7 @@ export const calculateImportation = (values: Calculator) => {
     // Calculate aux CIF item values
     row.CIF = (row.FOB + internationalFleet * row.weightFraction) * 1.01;
     row.FODINFA = row.CIF * fodinfaTax;
-    const tariffRate = isNaN(row.tariffRate) ? 0 : row.tariffRate;
+    const tariffRate = getSafeNumber(row.tariffRate);
     row.tariff = (row.CIF * tariffRate) / 100;
 
     // Asign values to lot variables
