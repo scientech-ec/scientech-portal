@@ -57,14 +57,14 @@ const SaveDocument: React.FC<Props> = ({ handleClose }) => {
           onClick={handleSaveAs}
           icon={<DocumentDuplicateIcon className="h-5 w-5" />}
         >
-          Guardar como
+          Guardar una copia
         </CustomButton>
         <CustomButton
           variant="success"
           onClick={handleSave}
           icon={<RefreshIcon className="h-5 w-5" />}
         >
-          Guardar
+          Actualizar
         </CustomButton>
         <CustomButton
           variant="danger"
