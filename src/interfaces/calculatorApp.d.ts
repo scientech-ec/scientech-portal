@@ -38,7 +38,7 @@ export type ArticlesHeader = {
   endSymbol?: string;
 };
 
-export type CalculationOutputs = {
+export type CalculatorOutputs = {
   rowWeight: number;
   EXW: number;
   weightFraction: number;
