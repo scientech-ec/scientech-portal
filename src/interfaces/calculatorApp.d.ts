@@ -29,6 +29,7 @@ export type CalculatorInputs = {
 };
 
 export type ArticleOutputs = {
+  [key: string]: number;
   rowWeight: number;
   EXW: number;
   weightFraction: number;

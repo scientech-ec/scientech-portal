@@ -3,6 +3,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { BSON } from "realm-web";
 import {
   addInputsRow,
+  addOutputsRow,
   headerDefault,
   inputsDefault,
 } from "../constants/calculator";
@@ -31,6 +32,7 @@ interface Props {
 
 interface Context {
   calculatorInputs: CalculatorInputs;
+  calculatorOutputs: ArticleOutputs[];
   handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   updateDocumentHeader: (event: React.ChangeEvent<HTMLInputElement>) => void;
   addRow: VoidFunction;
@@ -136,7 +138,7 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
       articles: [...prevState.articles, addInputsRow()],
     }));
 
-    setCalculatorOutputs((prevState) => [...prevState, {} as ArticleOutputs]);
+    setCalculatorOutputs((prevState) => [...prevState, addOutputsRow()]);
 
     setCalculatorHeader(
       produce((draft) => {
@@ -277,6 +279,7 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
 
   const contextValue = {
     calculatorInputs,
+    calculatorOutputs,
     handleChange,
     updateDocumentHeader,
     addRow,

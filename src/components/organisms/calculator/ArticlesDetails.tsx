@@ -19,8 +19,8 @@ const ArticlesDetails: React.FC = () => {
       <div className="mt-2 grid grid-cols-24 gap-1">
         <ArticleTableHeader />
 
-        {calculatorInputs.articles.map((article, idx) => (
-          <ArticleRow article={article} index={idx} key={idx} />
+        {calculatorInputs.articles.map((_article, index) => (
+          <ArticleRow rowIndex={index} key={index} />
         ))}
       </div>
     </section>

@@ -2,31 +2,39 @@ import { TrashIcon } from "@heroicons/react/outline";
 import React from "react";
 import { articleSchema } from "../../../constants/calculatorUI";
 import { useCalculator } from "../../../hooks/useCalculator";
-import type { ArticleInputs } from "../../../interfaces/calculatorApp";
+import { ArticlesTableHeaderSchema } from "../../../interfaces/calculatorApp";
 import CustomButton from "../../atoms/apps/CustomButton";
 import ArticleCell from "./ArticleCell";
 
 interface Props {
-  article: ArticleInputs;
-  index: number;
+  rowIndex: number;
 }
 
-const ArticleRow: React.FC<Props> = ({ article, index }) => {
-  const { deleteRow } = useCalculator();
+const ArticleRow: React.FC<Props> = ({ rowIndex }) => {
+  const { calculatorInputs, calculatorOutputs, deleteRow } = useCalculator();
+
+  const getCellValue = (column: ArticlesTableHeaderSchema) => {
+    const { field, name } = column;
+    if (field === "input") {
+      return calculatorInputs.articles[rowIndex][name];
+    } else {
+      return calculatorOutputs[rowIndex][name];
+    }
+  };
 
   return (
     <>
       {articleSchema.map((column) => (
         <ArticleCell
-          index={index}
+          index={rowIndex}
           key={column.name}
           schema={column}
-          value={article[column.name]}
+          value={getCellValue(column)}
         />
       ))}
       <CustomButton
         className="col-span-2 justify-center"
-        onClick={() => deleteRow(index)}
+        onClick={() => deleteRow(rowIndex)}
         variant="danger"
         icon={<TrashIcon className="h-5 w-5" />}
       >
