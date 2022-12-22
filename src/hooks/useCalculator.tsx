@@ -15,6 +15,7 @@ import { roundTo } from "../helpers/roundNumber";
 import type {
   ArticleInputs,
   CalculatorInputs,
+  CalculatorOutputs,
   DocumentHeader,
 } from "../interfaces/calculatorApp";
 import {
@@ -62,6 +63,9 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
 
   /* Initialize state */
   const [totalWeight, setTotalWeight] = useState(0);
+  const [calculatorOutputs, setCalculatorOutputs] = useState<
+    CalculatorOutputs[]
+  >([] as CalculatorOutputs[]);
   const [calculatorInputs, setCalculatorInputs] =
     useState<CalculatorInputs>(inputsInitialValue);
   const [calculatorHeader, setCalculatorHeader] =
@@ -132,6 +136,11 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
       articles: [...prevState.articles, addArticle()],
     }));
 
+    setCalculatorOutputs((prevState) => [
+      ...prevState,
+      {} as CalculatorOutputs,
+    ]);
+
     setCalculatorHeader(
       produce((draft) => {
         draft.articlesQty += 1;
@@ -146,8 +155,11 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
   const deleteRow = (index: number) => {
     const articles = calculatorInputs.articles.slice();
     articles.splice(index, 1);
-
     setCalculatorInputs({ ...calculatorInputs, articles });
+
+    const outputs = calculatorOutputs.slice();
+    outputs.splice(index, 1);
+    setCalculatorOutputs(outputs);
 
     setCalculatorHeader(
       produce((draft) => {
@@ -166,12 +178,9 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
     )
       return;
 
-    // todo: split outputs
-    const articles = calculateImportation(calculatorInputs);
+    const outputs = calculateImportation(calculatorInputs);
 
-    if (articles) {
-      setCalculatorInputs({ ...calculatorInputs, articles: [...articles] });
-    }
+    setCalculatorOutputs(outputs);
   };
 
   /**
