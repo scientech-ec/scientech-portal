@@ -1,19 +1,18 @@
 import { roundTo } from "../helpers/roundNumber";
 import type {
-  ArticleData,
-  CalculationValues,
-  Calculator,
+  ArticleInputs,
+  CalculationOutputs,
+  CalculatorInputs,
 } from "../interfaces/calculatorApp";
-
-type ArticlesType = ArticleData & CalculationValues;
 
 const getSafeNumber = (value: any): number => {
   return isNaN(value) ? 0 : value;
 };
 
-export const calculateImportation = (values: Calculator) => {
+export const calculateImportation = (values: CalculatorInputs) => {
   const ISDTax = 0.04;
   const fodinfaTax = 0.005;
+  const insuranceFraction = 1.01;
 
   const {
     articles: articlesSource,
@@ -28,29 +27,33 @@ export const calculateImportation = (values: Calculator) => {
     },
   } = values;
 
-  const articles: ArticlesType[] = articlesSource.map(
+  const articles: ArticleInputs[] = articlesSource.map(
     (article) =>
       ({
         ...article,
-      } as ArticlesType)
+      } as ArticleInputs)
   );
 
-  const bankExpensesSafe = getSafeNumber(bankExpenses);
-  const customsAgentSafe = getSafeNumber(customsAgent);
-  const importFleetPerLibreSafe = getSafeNumber(importFleetPerLibre);
-  const importProcedureSafe = getSafeNumber(importProcedure);
-  const localFleetSafe = getSafeNumber(localFleet);
-  const originFleetSafe = getSafeNumber(originFleet);
-  const originTaxesSafe = getSafeNumber(originTaxes);
+  const outputs: CalculationOutputs[] = new Array(articlesSource.length).fill(
+    {} as CalculationOutputs
+  );
+
+  const safeBankExpenses = getSafeNumber(bankExpenses);
+  const safeCustomsAgent = getSafeNumber(customsAgent);
+  const safeImportFleetPerLibre = getSafeNumber(importFleetPerLibre);
+  const safeImportProcedure = getSafeNumber(importProcedure);
+  const safeLocalFleet = getSafeNumber(localFleet);
+  const safeOriginFleet = getSafeNumber(originFleet);
+  const safeOriginTaxes = getSafeNumber(originTaxes);
 
   let totalWeight = 0;
   let totalFOB = 0;
 
-  articles.forEach((row) => {
-    const rowWeight = row.qty * row.unitWeight;
-    row.rowWeight = getSafeNumber(rowWeight);
+  outputs.forEach((row, index) => {
+    const { qty, unitWeight, unitPrice } = articles[index];
+    row.rowWeight = getSafeNumber(qty * unitWeight);
 
-    const EXW = (row.qty * row.unitPrice * (100 + originTaxesSafe)) / 100;
+    const EXW = (qty * unitPrice * (100 + safeOriginTaxes)) / 100;
     row.EXW = getSafeNumber(EXW);
 
     if (row.EXW > 0) {
@@ -59,49 +62,53 @@ export const calculateImportation = (values: Calculator) => {
   });
 
   // Calculate aux lot variables
-  const internationalFleet = totalWeight * importFleetPerLibreSafe;
+  const internationalFleet = totalWeight * safeImportFleetPerLibre;
   const baseCourier =
-    importProcedureSafe + internationalFleet + customsAgentSafe;
+    safeImportProcedure + internationalFleet + safeCustomsAgent;
 
-  articles.forEach((row) => {
-    row.weightFraction =
-      row.EXW > 0 && totalWeight > 0 ? row.rowWeight / totalWeight : 0;
+  outputs.forEach((row, index) => {
+    const { EXW, rowWeight } = row;
+    const { tariffRate } = articles[index];
+    const weightFraction =
+      EXW > 0 && totalWeight > 0 ? rowWeight / totalWeight : 0;
+    row.weightFraction = weightFraction;
 
     // Calculate aux FOB item values
-    row.FOB = originFleetSafe * row.weightFraction + row.EXW;
+    row.FOB = safeOriginFleet * weightFraction + EXW;
     row.ISD = row.FOB * ISDTax;
 
     // Calculate aux CIF item values
-    row.CIF = (row.FOB + internationalFleet * row.weightFraction) * 1.01;
+    row.CIF =
+      (row.FOB + internationalFleet * weightFraction) * insuranceFraction;
     row.FODINFA = row.CIF * fodinfaTax;
-    const tariffRate = getSafeNumber(row.tariffRate);
-    row.tariff = (row.CIF * tariffRate) / 100;
+    row.tariff = (row.CIF * getSafeNumber(tariffRate)) / 100;
 
     // Asign values to lot variables
     totalFOB += row.FOB;
   });
 
-  articles.forEach((row) => {
+  outputs.forEach((row, index) => {
+    const { FOB, ISD, FODINFA, tariff, weightFraction } = row;
+    const { margin, qty } = articles[index];
     const originCosts =
-      totalFOB > 0 ? row.FOB + (bankExpensesSafe * row.FOB) / totalFOB : 0;
-    const itemTaxes = row.ISD + row.FODINFA + row.tariff;
-    const importCost = baseCourier * row.weightFraction;
-    const localFleetCost = localFleetSafe * row.weightFraction;
+      totalFOB > 0 ? FOB + (safeBankExpenses * FOB) / totalFOB : 0;
+    const itemTaxes = ISD + FODINFA + tariff;
+    const importCost = baseCourier * weightFraction;
+    const localFleetCost = safeLocalFleet * weightFraction;
 
     const itemCost = originCosts + itemTaxes + importCost + localFleetCost;
-    const margin = !isNaN(row.margin) && row.margin > 0 ? row.margin : 0;
+    const safeMargin = !isNaN(margin) && margin > 0 ? margin : 0;
     const profit =
-      margin < 100
-        ? itemCost / (1 - margin / 100) - itemCost
-        : (itemCost * margin) / 100;
+      safeMargin < 100
+        ? itemCost / (1 - safeMargin / 100) - itemCost
+        : (itemCost * safeMargin) / 100;
     const itemFinalPrice = profit + itemCost;
 
     row.bunchCost = roundTo(itemCost);
-    row.unitProfit =
-      row.qty > 0 && !isNaN(row.qty) ? roundTo(profit / row.qty) : 0;
+    row.unitProfit = qty > 0 && !isNaN(qty) ? roundTo(profit / qty) : 0;
     row.unitFinalPrice =
-      row.qty > 0 && !isNaN(row.qty) ? roundTo(itemFinalPrice / row.qty) : 0;
+      qty > 0 && !isNaN(qty) ? roundTo(itemFinalPrice / qty) : 0;
   });
 
-  return articles;
+  return outputs;
 };
