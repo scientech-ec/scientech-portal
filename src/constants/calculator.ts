@@ -72,7 +72,7 @@ export const articlesHeader: ArticlesHeader[] = [
     name: "unitFinalPrice",
     field: "span",
     type: "number",
-    title: "PVP Unitario",
+    title: "Precio Unitario",
     initialValue: 0,
     startSymbol: "$",
   },
