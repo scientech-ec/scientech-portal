@@ -1,5 +1,5 @@
 import React from "react";
-import { lotSchema } from "../../../constants/calculator";
+import { lotSchema } from "../../../constants/calculatorUI";
 import { loadLotData } from "../../../helpers/loadLotData";
 import { useCalculator } from "../../../hooks/useCalculator";
 import LotCard from "../../molecules/calculator/LotCard";
