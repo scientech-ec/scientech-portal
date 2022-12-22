@@ -1,11 +1,12 @@
 import type {
-  ArticleData,
+  ArticleInputs,
   ArticlesHeader,
-  Calculator,
+  CalculatorInputs,
   DocumentHeader,
+  LotSchema,
 } from "../interfaces/calculatorApp";
 
-export const articlesHeader: ArticlesHeader[] = [
+export const articleSchema: ArticlesHeader[] = [
   {
     name: "qty",
     field: "input",
@@ -78,7 +79,7 @@ export const articlesHeader: ArticlesHeader[] = [
   },
 ];
 
-export const lotSchema = [
+export const lotSchema: LotSchema[] = [
   {
     title: "Costos en Origen",
     values: [
@@ -110,17 +111,16 @@ export const lotSchema = [
     ],
   },
 ];
-export type LotSchema = typeof lotSchema;
 
 export const addArticle = () => {
   const newArticle: Record<string, string | number> = {};
-  articlesHeader.forEach((column) => {
+  articleSchema.forEach((column) => {
     newArticle[column.name] = column.initialValue;
   });
-  return newArticle as ArticleData;
+  return newArticle as ArticleInputs;
 };
 
-export const inputsDefault = (): Calculator => ({
+export const inputsDefault = (): CalculatorInputs => ({
   lot: {
     originTaxes: 0,
     originFleet: 0,

@@ -1,13 +1,13 @@
 import { TrashIcon } from "@heroicons/react/outline";
 import React from "react";
-import { articlesHeader } from "../../../constants/calculator";
+import { articleSchema } from "../../../constants/calculator";
 import { useCalculator } from "../../../hooks/useCalculator";
-import type { ArticleData } from "../../../interfaces/calculatorApp";
+import type { ArticleInputs } from "../../../interfaces/calculatorApp";
 import CustomButton from "../../atoms/apps/CustomButton";
 import CustomInput from "../../atoms/apps/CustomInput";
 
 interface Props {
-  article: ArticleData;
+  article: ArticleInputs;
   index: number;
 }
 
@@ -16,7 +16,7 @@ const ArticleRow: React.FC<Props> = ({ article, index }) => {
 
   return (
     <>
-      {articlesHeader.map((column) =>
+      {articleSchema.map((column) =>
         column.field === "input" ? (
           <div
             key={column.name}

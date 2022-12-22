@@ -9,7 +9,7 @@ export type LotCost = {
   [key: string]: number;
 };
 
-export type ArticleData = {
+export type ArticleInputs = {
   [key: string]: number | string;
   qty: number;
   name: string;
@@ -22,9 +22,9 @@ export type ArticleData = {
   unitFinalPrice: number;
 };
 
-export type Calculator = {
+export type CalculatorInputs = {
   lot: LotCost;
-  articles: ArticleData[];
+  articles: ArticleInputs[];
   _id?: BSON.ObjectID;
 };
 
@@ -38,7 +38,7 @@ export type ArticlesHeader = {
   endSymbol?: string;
 };
 
-export type CalculationValues = {
+export type CalculationOutputs = {
   rowWeight: number;
   EXW: number;
   weightFraction: number;
@@ -47,6 +47,9 @@ export type CalculationValues = {
   CIF: number;
   FODINFA: number;
   tariff: number;
+  bunchCost: number;
+  unitProfit: number;
+  unitFinalPrice: number;
 };
 
 export type DocumentHeader = {
@@ -56,4 +59,15 @@ export type DocumentHeader = {
   articlesQty: number;
   timestamp?: number;
   _id?: BSON.ObjectID;
+};
+
+export type LotSchema = {
+  title: string;
+  values: {
+    name: string;
+    value: string;
+    endSymbol: string;
+    startSymbol?: string;
+    endSymbol?: string;
+  }[];
 };

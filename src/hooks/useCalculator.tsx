@@ -13,8 +13,8 @@ import {
 } from "../helpers/localStorage";
 import { roundTo } from "../helpers/roundNumber";
 import type {
-  ArticleData,
-  Calculator,
+  ArticleInputs,
+  CalculatorInputs,
   DocumentHeader,
 } from "../interfaces/calculatorApp";
 import {
@@ -29,7 +29,7 @@ interface Props {
 }
 
 interface Context {
-  calculatorInputs: Calculator;
+  calculatorInputs: CalculatorInputs;
   handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   updateDocumentHeader: (event: React.ChangeEvent<HTMLInputElement>) => void;
   addRow: VoidFunction;
@@ -55,7 +55,7 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
   const inputsDatabase = new CalculatorStorage(currentUser, inputsDatabaseId);
 
   /* Load data from local storage if possible */
-  const inputsInitialValue: Calculator =
+  const inputsInitialValue: CalculatorInputs =
     loadFromLocalStorage("inputs") ?? inputsDefault();
   const headerInitialValue: DocumentHeader =
     loadFromLocalStorage("header") ?? headerDefault();
@@ -63,7 +63,7 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
   /* Initialize state */
   const [totalWeight, setTotalWeight] = useState(0);
   const [calculatorInputs, setCalculatorInputs] =
-    useState<Calculator>(inputsInitialValue);
+    useState<CalculatorInputs>(inputsInitialValue);
   const [calculatorHeader, setCalculatorHeader] =
     useState<DocumentHeader>(headerInitialValue);
 
@@ -101,7 +101,7 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
    * @returns totalWeight {number}
    */
   const calculateTotalWeight = () => {
-    const calculateRowWeight = (previousValue: number, row: ArticleData) => {
+    const calculateRowWeight = (previousValue: number, row: ArticleInputs) => {
       const qty = isNaN(row.qty) ? 0 : row.qty;
       const weight = isNaN(row.unitWeight) ? 0 : row.unitWeight;
 

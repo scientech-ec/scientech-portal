@@ -1,9 +1,9 @@
 import type { LotSchema } from "../constants/calculator";
-import { Calculator } from "../interfaces/calculatorApp";
+import { CalculatorInputs } from "../interfaces/calculatorApp";
 
 export const loadLotData = (
   source: LotSchema,
-  calculatorData: Calculator
+  calculatorData: CalculatorInputs
 ): LotData =>
   source.map((data) => ({
     title: data.title,
