@@ -18,7 +18,9 @@ const ArticleRow: React.FC<Props> = ({ rowIndex }) => {
     if (field === "input") {
       return calculatorInputs.articles[rowIndex][name];
     } else {
-      return calculatorOutputs[rowIndex][name];
+      return calculatorOutputs.length === 0
+        ? 0
+        : calculatorOutputs[rowIndex][name];
     }
   };
 

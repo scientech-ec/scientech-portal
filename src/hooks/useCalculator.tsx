@@ -192,6 +192,7 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
   const reset = () => {
     setCalculatorInputs(inputsDefault());
     setCalculatorHeader(headerDefault());
+    setCalculatorOutputs([]);
   };
 
   /**
@@ -268,6 +269,7 @@ export const CalculatorProvider: React.FC<Props> = ({ children }) => {
 
     setCalculatorHeader(downloadedHeader);
     setCalculatorInputs(downloadedInputs);
+    setCalculatorOutputs([]);
   };
 
   /**
