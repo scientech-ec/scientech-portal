@@ -1,6 +1,5 @@
 import { roundTo } from "../helpers/roundNumber";
 import type {
-  ArticleInputs,
   ArticleOutputs,
   CalculatorInputs,
 } from "../interfaces/calculatorApp";
@@ -15,7 +14,7 @@ export const calculateImportation = (values: CalculatorInputs) => {
   const insuranceFraction = 1.01;
 
   const {
-    articles: articlesSource,
+    articles,
     lot: {
       bankExpenses,
       customsAgent,
@@ -27,16 +26,9 @@ export const calculateImportation = (values: CalculatorInputs) => {
     },
   } = values;
 
-  const articles: ArticleInputs[] = articlesSource.map(
-    (article) =>
-      ({
-        ...article,
-      } as ArticleInputs)
-  );
-
-  const outputs: ArticleOutputs[] = new Array(articlesSource.length).fill(
-    {} as ArticleOutputs
-  );
+  const outputs: ArticleOutputs[] = new Array(articles.length)
+    .fill("")
+    .map((_) => ({} as ArticleOutputs));
 
   const safeBankExpenses = getSafeNumber(bankExpenses);
   const safeCustomsAgent = getSafeNumber(customsAgent);
