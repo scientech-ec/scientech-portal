@@ -7,7 +7,7 @@ const ArticlesDetails: React.FC = () => {
   const { calculatorInputs, totalWeight } = useCalculator();
 
   return (
-    <section className="w-full rounded-md border p-4">
+    <section className="w-full items-center justify-between rounded-md border p-4 shadow-sm">
       <div className="flex justify-between">
         <h5>Detalle de Artículos</h5>
 

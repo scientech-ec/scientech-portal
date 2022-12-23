@@ -9,7 +9,7 @@ const LotDetails: React.FC = () => {
   const lotObject = loadLotData(lotSchema, calculatorInputs);
 
   return (
-    <section className="w-full rounded-md border p-4">
+    <section className="w-full items-center justify-between rounded-md border p-4 shadow-sm">
       <h5>Detalle de Lote</h5>
       <div className="mt-2 flex justify-around">
         {lotObject.map((category, index) => (
