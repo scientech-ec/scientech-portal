@@ -12,7 +12,8 @@ import {
   loadFromLocalStorage,
   storeInLocalStorage,
 } from "../helpers/localStorage";
-import { roundTo } from "../helpers/roundNumber";
+import { roundTo } from "../helpers/numberHelpers";
+
 import type {
   ArticleInputs,
   ArticleOutputs,

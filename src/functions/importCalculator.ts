@@ -1,12 +1,8 @@
-import { roundTo } from "../helpers/roundNumber";
+import { getSafeNumber, roundTo } from "../helpers/numberHelpers";
 import type {
   ArticleOutputs,
   CalculatorInputs,
 } from "../interfaces/calculatorApp";
-
-const getSafeNumber = (value: any): number => {
-  return isNaN(value) ? 0 : value;
-};
 
 export const calculateImportation = (values: CalculatorInputs) => {
   const ISDTax = 0.04;
@@ -103,4 +99,17 @@ export const calculateImportation = (values: CalculatorInputs) => {
   });
 
   return outputs;
+};
+
+export const calculateIvaTax = (arg: ArticleOutputs) => {
+  const IVARate = 0.12;
+  const IVA = roundTo((arg.CIF + arg.tariff + arg.FODINFA) * IVARate);
+
+  return getSafeNumber(IVA);
+};
+
+export const totalCustomTax = (arg: ArticleOutputs) => {
+  const IVA = calculateIvaTax(arg);
+  const result = getSafeNumber(arg.FODINFA + arg.tariff + IVA);
+  return roundTo(result);
 };
